@@ -1,0 +1,70 @@
+/*TUDO ---------------------------------------------------------------------------------------------*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+}
+
+/*TOOLBAR ---------------------------------------------------------------------------------------------*/
+.toolbar {
+    width: 100%;
+    background-color: #19041D;
+    color: #ffffff;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 3px 0 12px -2px #9A15D8;
+}
+
+.toolbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.toolbar .nav {
+    display: flex;
+    gap: 20px;
+}
+
+.toolbar .nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolbar .nav a:hover {
+    color: #9A15D8;
+}
+
+.toolbar .icon-btn {
+    background-color: #000000;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.toolbar .icon-btn:hover {
+    background-color: #9A15D8;
+}
+
+.toolbar .icon {
+    color: white;
+    font-size: 20px;
+}

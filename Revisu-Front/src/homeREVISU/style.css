@@ -1,0 +1,473 @@
+/*CARROSEL PRINCIPAL ---------------------------------------------------------------------------------------------*/
+.carrousel-container {
+    margin-top: 35px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: #000;
+}
+
+.carrousel-container .slide {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    background-color: #000;
+    border-radius: 80px;
+    padding: 30px;
+    gap: 30px;
+    box-shadow: -8px 0 12px -2px #9A15D8;
+}
+
+.carrousel-container .text-block {
+    flex: 1;
+    color: #ffffff;
+}
+
+.carrousel-container .text-block h2 {
+    color: #9A15D8;
+    margin-bottom: 12px;
+    font-size: 30px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.carrousel-container .text-block p {
+    font-size: 20px;
+    line-height: 1.5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 8px;
+}
+
+.carrousel-container .slide-image {
+    width: 45%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.carrousel-container .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.carrousel-container .arrow.left {
+    left: 30px;
+}
+
+.carrousel-container .arrow.right {
+    right: 30px;
+}
+
+.carrousel-container .arrow:hover {
+    color: #9A15D8;
+}
+
+/*CARROSEL OBRAS*/
+.carrousel-obrasDesta .titulo {
+    margin-top: 3%;
+    margin-left: 3%;
+    display: flex;
+    width: 14%;
+    border-radius: 80px;
+    box-shadow: -8px 0 12px -2px #9A15D8;
+}
+
+.carrousel-obrasDesta p {
+    font-size: 20px;
+    line-height: 1.5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 8px;
+    color: #ffffff;
+}
+
+.slides-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 0 50px;
+}
+
+.card-obra {
+    background: #000000;
+    border-radius: 30%;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    box-shadow: 0px -10px 12px -4px #9A15D8;
+    /* box-shadow: 0px -10px 12px -4px #4cd815; */
+}
+
+.slide-imageObras {
+    width: 70%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15%;
+}
+
+.title-obra {
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.container-carrousel-obrasDesta {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    width: 95%;
+    margin-left: 2.5%;
+}
+
+.container-carrousel-obrasDesta .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: clamp(24px, 4vw, 48px);
+    color: white;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.container-carrousel-obrasDesta .arrow.left {
+    left: 5px;
+}
+
+.container-carrousel-obrasDesta .arrow.right {
+    right: 5px;
+}
+
+.container-carrousel-obrasDesta .arrow:hover {
+    color: #9A15D8;
+}
+
+.container-carrousel-obrasDesta .icon-btn {
+    background-color: #000000;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    margin-left: 30%;
+    margin-top: 10px;
+    box-shadow: 1px 1px 10px 1px #d8c415ff;
+    width: 40%;
+}
+
+.container-carrousel-obrasDesta .icon-btn:hover {
+    background-color: #9A15D8;
+}
+
+.container-carrousel-obrasDesta .icon {
+    color: white;
+    font-size: 20px;
+}
+
+/* responsivo */
+@media (max-width: 1024px) {
+    .slides-row {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 por vez */
+    }
+}
+
+@media (max-width: 600px) {
+    .slides-row {
+        grid-template-columns: 1fr;
+        /* 1 por vez */
+    }
+
+    .slide-imageObras {
+        height: 180px;
+    }
+}
+
+/*CARROSEL CELEBRIDADES---------------------------------------------------------------------------------------------*/
+.carrousel-celeDesta .titulo {
+    margin-top: 3%;
+    margin-left: 3%;
+    display: flex;
+    width: 16%;
+    border-radius: 80px;
+    box-shadow: -8px 0 12px -2px #9A15D8;
+}
+
+.carrousel-celeDesta p {
+    font-size: 20px;
+    line-height: 1.5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 8px;
+    color: #ffffff;
+}
+
+.container-carrousel-celeDesta {
+    position: relative;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    margin-left: 5%;
+}
+
+.slides-grid-celeDesta {
+    width: 100%;
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 18px;
+    padding: 0 50px;
+}
+
+.card-celeDesta {
+    background: #000;
+    border-radius: 14px;
+    padding: 12px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.slide-imageceleDesta {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 40%;
+    flex-shrink: 0;
+}
+
+.info-celeDesta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.title-celeDesta {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.generos-celeDesta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.genero-chip {
+    font-size: 15px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #000000;
+    border: 2px solid #9A15D8;
+    color: white;
+}
+
+.container-carrousel-celeDesta .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: clamp(24px, 4vw, 48px);
+    color: white;
+    z-index: 2;
+}
+
+.container-carrousel-celeDesta .arrow.left {
+    left: 5px;
+}
+
+.container-carrousel-celeDesta .arrow.right {
+    right: 5px;
+}
+
+.container-carrousel-celeDesta .arrow:hover {
+    color: #9A15D8;
+}
+
+.container-carrousel-celeDesta .icon-btn {
+    background-color: #000000;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.container-carrousel-celeDesta .icon-btn:hover {
+    background-color: #9A15D8;
+}
+
+.container-carrousel-celeDesta .icon {
+    font-size: 30px;
+}
+
+@media (max-width: 700px) {
+    .slides-grid-cele {
+        grid-template-rows: auto;
+        grid-auto-flow: row;
+        /* no mobile fica normal */
+        grid-template-columns: 1fr;
+    }
+
+    .card-cele {
+        flex-direction: row;
+    }
+}
+
+/*CARROSEL DIRETORES ---------------------------------------------------------------------------------------------*/
+.carrousel-diretDesta .titulo {
+    margin-top: 3%;
+    margin-left: 3%;
+    display: flex;
+    width: 16%;
+    border-radius: 80px;
+    box-shadow: -8px 0 12px -2px #9A15D8;
+
+}
+
+.carrousel-diretDesta p {
+    font-size: 20px;
+    line-height: 1.5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 8px;
+    color: #ffffff;
+}
+
+.container-carrousel-diretDesta {
+    position: relative;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    margin-left: 5%;
+}
+
+.slides-grid-diretDesta {
+    width: 100%;
+    display: grid;
+    grid-template-rows: repeat(1, auto);
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 18px;
+    padding: 0 50px;
+}
+
+.card-diretDesta {
+    background: #000;
+    border-radius: 14px;
+    padding: 12px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.slide-imagediretDesta {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 40%;
+    flex-shrink: 0;
+}
+
+.info-diretDesta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.title-diretDesta {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.generos-celeDesta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.container-carrousel-diretDesta .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: clamp(24px, 4vw, 48px);
+    color: white;
+    z-index: 2;
+}
+
+.container-carrousel-diretDesta .arrow.left {
+    left: 5px;
+}
+
+.container-carrousel-diretDesta .arrow.right {
+    right: 5px;
+}
+
+.container-carrousel-diretDesta .arrow:hover {
+    color: #9A15D8;
+}
+
+.container-carrousel-diretDesta .icon-btn {
+    background-color: #000000;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.container-carrousel-diretDesta .icon-btn:hover {
+    background-color: #9A15D8;
+}
+
+.container-carrousel-diretDesta .icon {
+    font-size: 30px;
+}
+
+@media (max-width: 700px) {
+    .slides-grid-diretDesta {
+        grid-template-rows: auto;
+        grid-auto-flow: row;
+        /* no mobile fica normal */
+        grid-template-columns: 1fr;
+    }
+
+    .card-diretDesta {
+        flex-direction: row;
+    }
+}
