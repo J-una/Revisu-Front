@@ -1,3 +1,27 @@
+.home-container {
+    position: relative;
+    width: 100%;
+    min-height: 250vh;
+    isolation: isolate;
+}
+
+.home-image {
+    position: absolute;
+    top: -1.5%;
+    width: 100%;
+    height: 250vh;
+    background-image: url("../IMAGES/fundoSalaCinema.jpg");
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.home-content {
+    position: relative;
+    z-index: 0;
+}
+
 /*CARROSEL PRINCIPAL ---------------------------------------------------------------------------------------------*/
 .carrousel-container {
     margin-top: 35px;
@@ -6,7 +30,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.72);
 }
 
 .carrousel-container .slide {
@@ -14,7 +38,7 @@
     align-items: center;
     justify-content: space-between;
     width: 80%;
-    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.72);
     border-radius: 80px;
     padding: 30px;
     gap: 30px;
@@ -57,14 +81,17 @@
     color: white;
     cursor: pointer;
     padding: 10px;
+    outline: none;
 }
 
 .carrousel-container .arrow.left {
-    left: 30px;
+    left: 0;
+    transform: translate(200%, -50%);
 }
 
 .carrousel-container .arrow.right {
-    right: 30px;
+    right: 0;
+    transform: translate(-200%, -50%);
 }
 
 .carrousel-container .arrow:hover {
@@ -94,12 +121,12 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
-    padding: 0 50px;
+    padding: 0 20px;
 }
 
 .card-obra {
-    background: #000000;
-    border-radius: 30%;
+    background: rgba(0, 0, 0, 0.72);
+    border-radius: 15%;
     padding: 10px;
     text-align: center;
     color: white;
@@ -108,6 +135,7 @@
 }
 
 .slide-imageObras {
+    margin-top: 5%;
     width: 70%;
     height: 400px;
     object-fit: cover;
@@ -140,14 +168,17 @@
     color: white;
     cursor: pointer;
     z-index: 2;
+    outline: none;
 }
 
 .container-carrousel-obrasDesta .arrow.left {
-    left: 5px;
+    left: 0;
+    transform: translate(-60%, -50%);
 }
 
 .container-carrousel-obrasDesta .arrow.right {
-    right: 5px;
+    right: 0;
+    transform: translate(60%, -50%);
 }
 
 .container-carrousel-obrasDesta .arrow:hover {
@@ -170,9 +201,18 @@
     width: 40%;
 }
 
-.container-carrousel-obrasDesta .icon-btn:hover {
+.sinopse-btn:hover {
+    background-color: #d8c415ff;
+}
+
+.marcar-btn:hover {
+    background-color: #4cd815;
+}
+
+.desmarcar-btn:hover {
     background-color: #9A15D8;
 }
+
 
 .container-carrousel-obrasDesta .icon {
     color: white;
@@ -232,11 +272,12 @@
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
     gap: 18px;
-    padding: 0 50px;
+    padding: 0 20px;
 }
 
 .card-celeDesta {
-    background: #000;
+    background-color: rgba(0, 0, 0, 0.72);
+    ;
     border-radius: 14px;
     padding: 12px;
     color: white;
@@ -292,14 +333,17 @@
     font-size: clamp(24px, 4vw, 48px);
     color: white;
     z-index: 2;
+    outline: none;
 }
 
 .container-carrousel-celeDesta .arrow.left {
-    left: 5px;
+    left: 0;
+    transform: translate(-80%, -50%);
 }
 
 .container-carrousel-celeDesta .arrow.right {
-    right: 5px;
+    right: 0;
+    transform: translate(70%, -50%);
 }
 
 .container-carrousel-celeDesta .arrow:hover {
@@ -319,7 +363,7 @@
 }
 
 .container-carrousel-celeDesta .icon-btn:hover {
-    background-color: #9A15D8;
+    background-color: #6c6a6d;
 }
 
 .container-carrousel-celeDesta .icon {
@@ -378,7 +422,8 @@
 }
 
 .card-diretDesta {
-    background: #000;
+    background-color: rgba(0, 0, 0, 0.72);
+    ;
     border-radius: 14px;
     padding: 12px;
     color: white;
@@ -409,12 +454,6 @@
     font-weight: 700;
 }
 
-.generos-celeDesta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
 .container-carrousel-diretDesta .arrow {
     position: absolute;
     top: 50%;
@@ -425,14 +464,17 @@
     font-size: clamp(24px, 4vw, 48px);
     color: white;
     z-index: 2;
+    outline: none;
 }
 
 .container-carrousel-diretDesta .arrow.left {
-    left: 5px;
+    left: 0;
+    transform: translate(-50%, -50%);
 }
 
 .container-carrousel-diretDesta .arrow.right {
-    right: 5px;
+    right: 0;
+    transform: translate(50%, -50%);
 }
 
 .container-carrousel-diretDesta .arrow:hover {
@@ -452,7 +494,7 @@
 }
 
 .container-carrousel-diretDesta .icon-btn:hover {
-    background-color: #9A15D8;
+    background-color: #6c6a6d;
 }
 
 .container-carrousel-diretDesta .icon {

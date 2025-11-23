@@ -21,8 +21,8 @@ export default function Toolbar({ logado }) {
             </nav>
 
             <nav className="nav">
-                <button className="icon-btn"><FaCog className="icon" /></button>
-                <button className="icon-btn"><FaUser className="icon" /></button>
+                <Link to="/editar"><button className="icon-btn"><FaCog className="icon" /></button></Link>
+                <FaUser className="icon" style={{ marginTop: '7%' }} />
                 <Link to="/login">Entrar</Link>
             </nav>
         </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaCog, FaUser } from "react-icons/fa";
+import { LuScissorsLineDashed } from "react-icons/lu";
 import { RiFilmAiLine } from "react-icons/ri";
 import { PiFilmReel } from "react-icons/pi";
 import { FaStar } from "react-icons/fa";
@@ -13,7 +13,6 @@ function HomeREVISU() {
   const [indexCarroselCele, setIndexCarroselCele] = useState(0);
   const [indexCarroselDire, setIndexCarroselDire] = useState(0);
   const [marcado, setMarcado] = useState(true);
-  const [logado, setLogado] = useState(true);
 
   const slidesHome = [
     {
@@ -227,214 +226,197 @@ function HomeREVISU() {
   }, []);
 
   return (
-    <div>
-      {/* <div className="toolbar">
-        <img src='src/IMAGES/RevisuLOGOfundoPRETO.png' style={{ width: '3.5%', height: '3.5%', borderRadius: '18px' }} />
+    <div className="home-container">
 
-        <nav className="nav">
-          <Link to="/home">Home</Link>
-          <Link to="/pesquisar">Pesquisar</Link>
+      <div className="home-image"></div>
 
-          {logado === true && (
-            <Link to="/biblioteca">Biblioteca</Link>
-          )}
+      <div className="home-content">
+        <div className="carrousel-container">
+          <button className="arrow left" onClick={prevSlideHome}>❮</button>
 
-          {logado === true && (
-            <Link to="/para-voce">Para Você</Link>
-          )}
+          <div className="slide">
+            <div className="text-block">
+              <h2>{slidesHome[indexCarroselHome].title}</h2>
+              <p>{slidesHome[indexCarroselHome].text}</p>
+            </div>
 
-          <Link to="/sobre">Sobre nós</Link>
-        </nav>
-
-        <nav className="nav">
-          <button className="icon-btn">
-            <FaCog className="icon" />
-          </button>
-
-          <button className="icon-btn">
-            <FaUser className="icon" />
-          </button>
-
-          <a href="#">Entrar</a>
-        </nav>
-      </div> */}
-
-      <div className="carrousel-container">
-        <button className="arrow left" onClick={prevSlideHome}>❮</button>
-
-        <div className="slide">
-          <div className="text-block">
-            <h2>{slidesHome[indexCarroselHome].title}</h2>
-            <p>{slidesHome[indexCarroselHome].text}</p>
+            <img className="slide-image" src={slidesHome[indexCarroselHome].image} alt="slide" style={{ borderRadius: '60px' }} />
           </div>
 
-          <img className="slide-image" src={slidesHome[indexCarroselHome].image} alt="slide" style={{ borderRadius: '60px' }} />
+          <button className="arrow right" onClick={nextSlideHome}>❯</button>
         </div>
 
-        <button className="arrow right" onClick={nextSlideHome}>❯</button>
-      </div>
-
-      <div className="carrousel-obrasDesta">
-        <div className="titulo">
-          <p style={{ color: '#9A15D8', marginLeft: '10px' }}>OBRAS</p>
-          <p style={{ marginLeft: '10px' }}>EM DESTAQUE:</p>
-        </div>
-
-        <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-          <p>Principais filmes de acordo com suas preferências.</p>
-        </div>
-
-        <div className="container-carrousel-obrasDesta">
-          <button className="arrow left" onClick={prevSlideObra}>❮</button>
-
-          <div className="slides-row">
-            {getVisibleSlidesObras().map((slide) => (
-              <div className="card-obra" key={slide._i} style={{ boxShadow: marcado != true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8' }}>
-
-                <img
-                  className="slide-imageObras"
-                  src={slide.image}
-                  alt={slide.title}
-                />
-
-                <p className="title-obra">{slide.title}</p>
-
-                <button className="icon-btn">
-                  <PiFilmReel className='icon' />
-                  <p style={{ marginLeft: '10px' }}>Sinopse</p>
-                </button>
-
-                <button className="icon-btn" style={{ boxShadow: marcado === true ? '1px 1px 10px 1px #4cd815' : '1px 1px 10px 1px #9A15D8' }}>
-                  <RiFilmAiLine className='icon' />
-                  <p style={{ marginLeft: '10px' }}>{marcado === true ? 'Marcar' : 'Desmarcar'}</p>
-                </button>
-
-
-                <p className="title-obra"><FaStar style={{ color: '#d8c415ff' }} /> {slide.value}</p>
-              </div>
-            ))}
+        <div className="carrousel-obrasDesta">
+          <div className="titulo">
+            <p style={{ color: '#9A15D8', marginLeft: '10px' }}>OBRAS</p>
+            <p style={{ marginLeft: '10px' }}>EM DESTAQUE:</p>
           </div>
 
-          <button className="arrow right" onClick={nextSlideObra}>❯</button>
-        </div>
-      </div>
+          <div style={{ marginTop: '10px', marginLeft: '5%' }}>
+            <p>Principais obras de acordo com telespectadores.</p>
+          </div>
 
-      <div className="carrousel-celeDesta">
+          <div className="container-carrousel-obrasDesta">
+            <button className="arrow left" onClick={prevSlideObra}>❮</button>
 
-        <div className="titulo">
-          <p style={{ color: '#9A15D8', marginLeft: '10px' }}>CELEBRIDADES</p>
-          <p style={{ marginLeft: '10px' }}>EM DESTAQUE:</p>
-        </div>
+            <div className="slides-row">
+              {getVisibleSlidesObras().map((slide) => (
+                <div className="card-obra" key={slide._i} style={{ boxShadow: marcado != true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8' }}>
 
-        <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-          <p>Atores e Atrizes de acordo com suas preferências.</p>
-        </div>
+                  <img
+                    className="slide-imageObras"
+                    src={slide.image}
+                    alt={slide.title}
+                  />
 
-        <div className="container-carrousel-celeDesta">
-          <button className="arrow left" onClick={prevSlideCele}>❮</button>
+                  <p className="title-obra">{slide.title}</p>
 
-          <div className="slides-grid-celeDesta">
-            {getVisibleSlidesCelebridades().map((cele) => (
-              <div className="card-celeDesta" key={cele._i} style={{ boxShadow: marcado != true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
-
-                <img
-                  className="slide-imageceleDesta"
-                  src={cele.image}
-                  alt={cele.title}
-                  style={{ width: '15%' }}
-                />
-
-                <div className="info-celeDesta" style={{ width: '77%' }}>
-                  <p className="title-celeDesta">{cele.title}</p>
-
-                  <div className="generos-celeDesta">
-                    {cele.generos.map((g, idx) => (
-                      <span
-                        className="genero-chip"
-                        key={idx}
-                        style={{
-                          borderColor: generoColors[g] || "#9A15D8",  // fallback caso não exista
-                        }}
-                      >
-                        {g}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={{ width: '8%' }}>
-                  <button className="icon-btn">
-                    <BsPersonBoundingBox className="icon" style={{ color: '#d8c415ff' }} />
+                  <button className="icon-btn sinopse-btn">
+                    <PiFilmReel className='icon' />
+                    <p style={{ marginLeft: '10px' }}>Sinopse</p>
                   </button>
 
                   <div style={{ display: marcado === true ? '' : 'none' }}>
-                    <button className="icon-btn">
-                      <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
+                    <button className="icon-btn marcar-btn" style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}>
+                      <RiFilmAiLine className='icon' />
+                      <p style={{ marginLeft: '10px' }}>Marcar</p>
                     </button>
                   </div>
-                  <div style={{ display: marcado != true ? '' : 'none' }}>
-                    <button className="icon-btn">
-                      <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
+
+                  <div style={{ display: marcado !== true ? '' : 'none' }}>
+                    <button className="icon-btn desmarcar-btn" style={{ boxShadow: '1px 1px 10px 1px #9A15D8' }}>
+                      <LuScissorsLineDashed className='icon' />
+                      <p style={{ marginLeft: '10px' }}>Desmarcar</p>
                     </button>
                   </div>
+
+
+                  <p className="title-obra"><FaStar style={{ color: '#d8c415ff' }} /> {slide.value}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            <button className="arrow right" onClick={nextSlideObra}>❯</button>
+          </div>
+        </div>
+
+        <div className="carrousel-celeDesta">
+
+          <div className="titulo">
+            <p style={{ color: '#9A15D8', marginLeft: '10px' }}>CELEBRIDADES</p>
+            <p style={{ marginLeft: '10px' }}>EM DESTAQUE:</p>
           </div>
 
-          <button className="arrow right" onClick={nextSlideCele}>❯</button>
-        </div>
-      </div>
-
-      <div className="carrousel-diretDesta">
-        <div className="titulo">
-          <p style={{ color: '#9A15D8', marginLeft: '10px' }}>DIRETORES</p>
-          <p style={{ marginLeft: '10px' }}>EM DESTAQUE:</p>
-        </div>
-
-        <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-          <p>Diretores de acordo com suas preferências.</p>
-        </div>
-
-        <div className="container-carrousel-diretDesta">
-          <button className="arrow left" onClick={prevSlideDire}>❮</button>
-
-          <div className="slides-grid-diretDesta">
-            {getVisibleSlidesDiretores().map((dire) => (
-              <div className="card-diretDesta" key={dire._i} style={{ boxShadow: marcado != true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
-
-                <img
-                  className="slide-imagediretDesta"
-                  src={dire.image}
-                  alt={dire.title}
-                  style={{ width: '15%' }}
-                />
-
-                <div className="info-diretDesta" style={{ width: '77%' }}>
-                  <p className="title-diretDesta">{dire.title}</p>
-
-                  <div className="generos-diretDesta">
-                    <p className="title-diretDesta">{dire.text}</p>
-                  </div>
-                </div>
-
-                <div style={{ width: '8%' }}>
-                  <div style={{ display: marcado === true ? '' : 'none' }}>
-                    <button className="icon-btn">
-                      <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
-                    </button>
-                  </div>
-                  <div style={{ display: marcado != true ? '' : 'none' }}>
-                    <button className="icon-btn">
-                      <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div style={{ marginTop: '10px', marginLeft: '5%' }}>
+            <p>Principais Atores e Atrizes de acordo com telespectadores.</p>
           </div>
 
-          <button className="arrow right" onClick={nextSlideDire}>❯</button>
+          <div className="container-carrousel-celeDesta">
+            <button className="arrow left" onClick={prevSlideCele}>❮</button>
+
+            <div className="slides-grid-celeDesta">
+              {getVisibleSlidesCelebridades().map((cele) => (
+                <div className="card-celeDesta" key={cele._i} style={{ boxShadow: marcado != true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
+
+                  <img
+                    className="slide-imageceleDesta"
+                    src={cele.image}
+                    alt={cele.title}
+                    style={{ width: '15%' }}
+                  />
+
+                  <div className="info-celeDesta" style={{ width: '77%' }}>
+                    <p className="title-celeDesta">{cele.title}</p>
+
+                    <div className="generos-celeDesta">
+                      {cele.generos.map((g, idx) => (
+                        <span
+                          className="genero-chip"
+                          key={idx}
+                          style={{
+                            borderColor: generoColors[g] || "#9A15D8",  // fallback caso não exista
+                          }}
+                        >
+                          {g}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div style={{ width: '8%' }}>
+                    <button className="icon-btn">
+                      <BsPersonBoundingBox className="icon" style={{ color: '#d8c415ff' }} />
+                    </button>
+
+                    <div style={{ display: marcado === true ? '' : 'none' }}>
+                      <button className="icon-btn">
+                        <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
+                      </button>
+                    </div>
+                    <div style={{ display: marcado != true ? '' : 'none' }}>
+                      <button className="icon-btn">
+                        <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button className="arrow right" onClick={nextSlideCele}>❯</button>
+          </div>
+        </div>
+
+        <div className="carrousel-diretDesta">
+          <div className="titulo">
+            <p style={{ color: '#9A15D8', marginLeft: '10px' }}>DIRETORES</p>
+            <p style={{ marginLeft: '10px' }}>EM DESTAQUE:</p>
+          </div>
+
+          <div style={{ marginTop: '10px', marginLeft: '5%' }}>
+            <p>Principais Diretores de acordo com telespectadores.</p>
+          </div>
+
+          <div className="container-carrousel-diretDesta">
+            <button className="arrow left" onClick={prevSlideDire}>❮</button>
+
+            <div className="slides-grid-diretDesta">
+              {getVisibleSlidesDiretores().map((dire) => (
+                <div className="card-diretDesta" key={dire._i} style={{ boxShadow: marcado != true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
+
+                  <img
+                    className="slide-imagediretDesta"
+                    src={dire.image}
+                    alt={dire.title}
+                    style={{ width: '15%' }}
+                  />
+
+                  <div className="info-diretDesta" style={{ width: '77%' }}>
+                    <p className="title-diretDesta">{dire.title}</p>
+
+                    <div className="generos-diretDesta">
+                      <p className="title-diretDesta">{dire.text}</p>
+                    </div>
+                  </div>
+
+                  <div style={{ width: '8%' }}>
+                    <div style={{ display: marcado === true ? '' : 'none' }}>
+                      <button className="icon-btn">
+                        <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
+                      </button>
+                    </div>
+                    <div style={{ display: marcado != true ? '' : 'none' }}>
+                      <button className="icon-btn">
+                        <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button className="arrow right" onClick={nextSlideDire}>❯</button>
+          </div>
         </div>
       </div>
     </div >

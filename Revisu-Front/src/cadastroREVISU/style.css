@@ -1,0 +1,168 @@
+.cadastro-container {
+    position: relative;
+    width: 100%;
+    min-height: 90vh;
+    isolation: isolate;
+}
+
+.cadastro-image {
+    position: absolute;
+    width: 100%;
+    height: 90vh;
+    background-image: url("src/IMAGES/fundoLogin.jpg");
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.cadastro-content {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cadastro-card {
+    width: min(900px, 95vw);
+    min-height: 520px;
+    border-radius: 28px;
+    background: rgba(0, 0, 0, 0.72);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+}
+
+.cadastro-left {
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cadastro-right {
+    padding: 36px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: white;
+}
+
+.cadastro-title {
+    text-align: center;
+    font-size: 34px;
+    letter-spacing: 1px;
+    color: #9A15D8;
+    font-family: "Segoe UI", sans-serif;
+    font-weight: 800;
+    margin-bottom: 0;
+}
+
+.cadastro-sub {
+    text-align: center;
+    font-size: 13px;
+    opacity: 0.8;
+    margin-top: -6px;
+    margin-bottom: 6px;
+}
+
+.cadastro-label {
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-left: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.cadastro-input {
+    width: 100%;
+    height: 56px;
+    border-radius: 999px;
+    border: none;
+    outline: none;
+    padding: 0 56px 0 18px;
+    font-size: 16px;
+    background: white;
+    color: #000;
+    box-shadow: -8px 0 12px -2px #9A15D8;
+}
+
+.input-wrapper.small {
+    width: 46%;
+}
+
+.cadastro-input.small {
+    height: 44px;
+    padding-right: 18px;
+}
+
+.eye-btn {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    font-size: 18px;
+}
+
+.cadastro-btn {
+    margin-top: 8px;
+    width: 100%;
+    height: 52px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: rgba(118, 28, 160, 0.72);
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
+    transition: 0.25s;
+}
+
+.cadastro-btn:hover {
+    background: #9A15D8;
+}
+
+.cadastro-footer {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.cadastro-footer a {
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.cadastro-footer a:hover {
+    color: #9A15D8;
+}
+
+@media (max-width: 800px) {
+    .cadastro-card {
+        grid-template-columns: 1fr;
+        /* vira 1 coluna */
+    }
+
+    .cadastro-left {
+        min-height: 180px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .input-wrapper.small {
+        width: 70%;
+    }
+}

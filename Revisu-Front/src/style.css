@@ -11,6 +11,20 @@ body {
     background-color: #000;
 }
 
+html,
+body {
+    overflow-x: hidden;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
 /*TOOLBAR ---------------------------------------------------------------------------------------------*/
 .toolbar {
     width: 100%;
@@ -21,6 +35,8 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: 3px 0 12px -2px #9A15D8;
+    position: relative;
+    z-index: 10;
 }
 
 .toolbar .logo {
