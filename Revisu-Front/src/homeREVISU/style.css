@@ -1,7 +1,7 @@
 .home-container {
     position: relative;
     width: 100%;
-    min-height: 250vh;
+    min-height: 260vh;
     isolation: isolate;
 }
 
@@ -9,7 +9,7 @@
     position: absolute;
     top: -1.5%;
     width: 100%;
-    height: 250vh;
+    height: 260vh;
     background-image: url("../IMAGES/fundoSalaCinema.jpg");
     background-size: cover;
     background-position: center;
@@ -131,7 +131,21 @@
     text-align: center;
     color: white;
     box-shadow: 0px -10px 12px -4px #9A15D8;
-    /* box-shadow: 0px -10px 12px -4px #4cd815; */
+    height: 750px;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 12px;
+}
+
+.card-obra>div:nth-child(2) {
+    height: 70px;
+}
+
+.card-obra>div:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
 }
 
 .slide-imageObras {
@@ -146,7 +160,15 @@
     margin-top: 8px;
     font-size: 16px;
     font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 42px;
+    line-height: 21px;
 }
+
 
 .container-carrousel-obrasDesta {
     position: relative;
@@ -277,7 +299,6 @@
 
 .card-celeDesta {
     background-color: rgba(0, 0, 0, 0.72);
-    ;
     border-radius: 14px;
     padding: 12px;
     color: white;
@@ -286,6 +307,38 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    height: 200px;
+}
+
+.foto-wrapper {
+    width: 120px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.foto-fallback {
+    width: 120px;
+    height: 150px;
+    border-radius: 40%;
+    background: #000;
+    border: 2px solid #9A15D8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.fallback-icon {
+    font-size: 50px;
+    color: white;
+}
+
+.fallback-text {
+    margin-top: 5px;
+    color: white;
+    font-size: 14px;
 }
 
 .slide-imageceleDesta {
@@ -308,10 +361,14 @@
     font-weight: 700;
 }
 
+
 .generos-celeDesta {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+    max-height: 118px;
+    overflow: hidden;
+    position: relative;
 }
 
 .genero-chip {
