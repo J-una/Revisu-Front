@@ -10,6 +10,7 @@ import { slideObra } from "../dados/slideObra.js";
 import { slideCelebridade } from "../dados/slideCelebridades.js";
 import { slideDiretore } from "../dados/slideDiretor.js";
 import { generoColors } from "../dados/generoColors.js";
+import { Link } from "react-router-dom";
 
 function HomeREVISU() {
   const [indexCarroselHome, setIndexCarroselHome] = useState(0);
@@ -172,10 +173,10 @@ function HomeREVISU() {
                   </div>
 
                   <div>
-                    <button className="icon-btn sinopse-btn">
+                    <Link to="/sinopse-obra"> <button className="icon-btn sinopse-btn">
                       <PiFilmReel className='icon' />
                       <p style={{ marginLeft: '10px' }}>Sinopse</p>
-                    </button>
+                    </button></Link>
 
                     <div style={{ display: marcado === true ? '' : 'none' }}>
                       <button className="icon-btn marcar-btn" style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}>

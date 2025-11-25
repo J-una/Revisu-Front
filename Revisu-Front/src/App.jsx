@@ -7,7 +7,8 @@ import CadastroREVISU from "./cadastroREVISU/index.jsx"
 import EditarREVISU from "./editarREVISU/index.jsx"
 import ParaVoceREVISU from "./paravoceREVISU/index.jsx"
 //import PesquisarREVISU from "./pesquisarREVISU/index.jsx"
-import sobrenosREVISU from "./sobrenosREVISU/index.jsx"
+import SobrenosREVISU from "./sobrenosREVISU/index.jsx"
+import SinopseobraREVISU from "./sinopseObraREVISU/index.jsx"
 // importe outras páginas aqui quando existir
 
 function App() {
@@ -24,7 +25,8 @@ function App() {
                 <Route path="/cadastro" element={<CadastroREVISU />} />
                 <Route path="/editar" element={<EditarREVISU />} />
                 <Route path="/para-voce" element={<ParaVoceREVISU />} />
-                <Route path="/sobre-nos" element={<sobrenosREVISU />} />
+                <Route path="/sobre-nos" element={<SobrenosREVISU />} />
+                <Route path="/sinopse-obra" element={<SinopseobraREVISU />} />
             </Route>
 
             <Route path="*" element={<h1>Página não encontrada</h1>} />

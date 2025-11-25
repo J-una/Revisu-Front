@@ -1,0 +1,223 @@
+.sinopse-container {
+    position: relative;
+    width: 100%;
+    min-height: 260vh;
+    isolation: isolate;
+}
+
+.sinopse-image {
+    position: absolute;
+    top: -2.5%;
+    width: 100%;
+    height: 260vh;
+    background-image: url("../IMAGES/fundoSalaCinema.jpg");
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.sinopse-content {
+    position: relative;
+    z-index: 0;
+}
+
+/* ===== TOPO SINOPSE ===== */
+.sinopse-top {
+    width: 92%;
+    margin: 3% auto 2%;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 26px;
+    align-items: start;
+}
+
+.sinopse-left {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.poster-card {
+    background: rgba(0, 0, 0, 0.72);
+    border-radius: 15%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.poster-img {
+    margin-top: 5%;
+    width: 80%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15%;
+}
+
+.poster-info {
+    display: row;
+    padding: 0 4px;
+}
+
+.poster-rating {
+    margin-top: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.poster-button {
+    margin-top: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.star-icon {
+    color: #d8c415ff;
+}
+
+.marcar-toggle {
+    background-color: #000000;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.marcar-toggle.marcar-btn:hover {
+    background: #4cd815;
+    color: #000;
+}
+
+.marcar-toggle.desmarcar-btn:hover {
+    background: #9A15D8;
+}
+
+.poster-info .icon {
+    color: white;
+    font-size: 20px;
+}
+
+.poster-info p {
+    color: white;
+    font-size: 20px;
+}
+
+.stars-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding-left: 6px;
+    font-size: 30px;
+}
+
+.star-outline {
+    color: #9A15D8;
+    opacity: .8;
+}
+
+/* comentário */
+.comentario-box {
+    background: rgba(0, 0, 0, 0.72);
+    box-shadow: -8px 0 12px -2px #9A15D8;
+    border-radius: 14px;
+    padding: 12px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 80%;
+}
+
+.comentario-box textarea {
+    background: rgba(82, 82, 82, 0.72);
+    min-height: 90px;
+    resize: none;
+    border-radius: 10px;
+    border: none;
+    padding: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.comentario-btn {
+    align-self: flex-end;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: rgba(118, 28, 160, 0.72);
+    color: white;
+    font-weight: 700;
+}
+
+.comentario-btn:hover {
+    background: #9A15D8;
+}
+
+/* coluna direita */
+.sinopse-right {
+    box-shadow: -8px 0 12px -2px #9A15D8;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 18px;
+    padding: 18px 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+}
+
+.sinopse-title {
+    text-align: center;
+    color: #9A15D8;
+    font-weight: 800;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.sinopse-block {
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.sinopse-label {
+    font-weight: 800;
+    color: #9A15D8;
+    margin-bottom: 4px;
+    font-size: large
+}
+
+.sinopse-text {
+    opacity: .95;
+    font-size: large
+}
+
+.sinopse-generos {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* responsivo */
+@media (max-width: 900px) {
+    .sinopse-top {
+        grid-template-columns: 1fr;
+    }
+
+    .poster-img {
+        height: 320px;
+    }
+}
