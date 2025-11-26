@@ -1,4 +1,5 @@
-import Toolbar from "./toolbar"; // sua toolbar (pode ser o HomeREVISU separado)
+import Toolbar from "./toolbar";
+import Footer from "./footer";
 import { Outlet } from "react-router-dom";
 
 export default function Layout({ logado }) {
@@ -6,6 +7,7 @@ export default function Layout({ logado }) {
         <>
             <Toolbar logado={logado} />
             <Outlet />
+            <Footer logado={logado} />
         </>
     );
 }

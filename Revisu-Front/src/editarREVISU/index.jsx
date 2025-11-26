@@ -12,7 +12,7 @@ function editarREVISU() {
             <div className="editar-image"></div>
 
             <div className="editar-contentTudo">
-                <div className="editar-content">
+                <div className="editar-content" style={{ marginTop: '1%', marginBottom: '1%' }}>
                     <h1 className="editar-title">EDITAR PERFIL</h1>
                     <p className="editar-sub">Atualize seus dados</p>
 

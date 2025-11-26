@@ -8,11 +8,8 @@ function loginREVISU() {
 
     return (
         <div className="login-container">
-
-            <div className="login-image"></div>
-
             <div className="login-content">
-                <div className="login-card" style={{ marginTop: '5%' }}>
+                <div className="login-card" style={{ marginTop: '6%', marginBottom: '6%' }}>
                     <h1 className="login-title">LOGIN</h1>
 
                     <label className="login-label">Usuário</label>

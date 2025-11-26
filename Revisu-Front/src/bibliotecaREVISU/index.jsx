@@ -195,13 +195,15 @@ function bibliotecaREVISU() {
 
     return (
         <div className="biblioteca-container">
-
-            <div className="biblioteca-image"></div>
-
+            <div><h1>-</h1></div>
             <div className="biblioteca-content">
+
                 <div className='tituloBiblioteca'>
-                    <h1 style={{ marginLeft: '15px' }}>MINHA BIBLIOTECA</h1>
+                    <div style={{ marginTop: '15px' }}>
+                        <h1 style={{ marginLeft: '15px' }}>MINHA BIBLIOTECA</h1>
+                    </div>
                 </div>
+
                 <div className="generosPreferidos">
                     <div className="titulo">
                         <p style={{ color: '#9A15D8', marginLeft: '10px' }}>GÊNEROS</p>
@@ -345,15 +347,17 @@ function bibliotecaREVISU() {
                                             <BsPersonBoundingBox className="icon" style={{ color: '#d8c415ff' }} />
                                         </button>
 
-                                        <div style={{ display: marcado === true ? '' : 'none' }}>
-                                            <button className="icon-btn">
-                                                <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
-                                            </button>
-                                        </div>
-                                        <div style={{ display: marcado != true ? '' : 'none' }}>
-                                            <button className="icon-btn">
-                                                <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
-                                            </button>
+                                        <div style={{ marginTop: '10%' }}>
+                                            <div style={{ display: marcado === true ? '' : 'none' }}>
+                                                <button className="icon-btn">
+                                                    <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
+                                                </button>
+                                            </div>
+                                            <div style={{ display: marcado != true ? '' : 'none' }}>
+                                                <button className="icon-btn">
+                                                    <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -419,15 +423,17 @@ function bibliotecaREVISU() {
                                             <BsPersonBoundingBox className="icon" style={{ color: '#d8c415ff' }} />
                                         </button>
 
-                                        <div style={{ display: marcado === true ? '' : 'none' }}>
-                                            <button className="icon-btn">
-                                                <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
-                                            </button>
-                                        </div>
-                                        <div style={{ display: marcado != true ? '' : 'none' }}>
-                                            <button className="icon-btn">
-                                                <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
-                                            </button>
+                                        <div style={{ marginTop: '10%' }}>
+                                            <div style={{ display: marcado === true ? '' : 'none' }}>
+                                                <button className="icon-btn">
+                                                    <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
+                                                </button>
+                                            </div>
+                                            <div style={{ display: marcado != true ? '' : 'none' }}>
+                                                <button className="icon-btn">
+                                                    <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -438,6 +444,7 @@ function bibliotecaREVISU() {
                     </div>
                 </div>
             </div>
+            <div><h1>-</h1></div>
         </div >
     )
 }

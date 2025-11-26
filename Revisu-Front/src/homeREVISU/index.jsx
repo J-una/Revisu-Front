@@ -10,7 +10,7 @@ import { slideObra } from "../dados/slideObra.js";
 import { slideCelebridade } from "../dados/slideCelebridades.js";
 import { slideDiretore } from "../dados/slideDiretor.js";
 import { generoColors } from "../dados/generoColors.js";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function HomeREVISU() {
   const [indexCarroselHome, setIndexCarroselHome] = useState(0);
@@ -22,6 +22,7 @@ function HomeREVISU() {
   const [slidesDiretores, setSlidesDiretores] = useState(slideDiretore)
   const [marcado, setMarcado] = useState(true);
   const generosColors = generoColors;
+  const navigate = useNavigate();
 
   function arredondarNota(nota) {
     const primeiraCasa = Math.floor(nota * 10) / 10;
@@ -37,25 +38,27 @@ function HomeREVISU() {
   const slidesHome = [
     {
       title: "REVISU",
-      text: `Bem-vindo ao REVISU! Aqui, você encontra sugestões personalizadas para todos os gostos, desde os grandes sucessos do cinema 
-      até as séries mais aclamadas do momento.  Ajudamos você a descobrir novas histórias envolventes, explorar diferentes gêneros e aproveitar ao 
-      máximo seu tempo de entretenimento.`,
+      text: `Descubra filmes, séries e especiais feitos para o seu gosto. 
+      Com o REVISU, você encontra desde grandes sucessos até produções menos conhecidas, 
+      sempre com recomendações pensadas no que você realmente gosta de assistir.`,
       image: "src/IMAGES/filmeCarrosel_cinema.jpg"
     },
     {
-      title: "Recomendações Inteligentes",
-      text: `Filmes e séries são uma das formas mais populares e envolventes de entretenimento. Eles nos permitem escapar da rotina, explorar novos mundos, 
-      viver diferentes emoções e refletir sobre temas importantes — tudo isso sem sair do lugar. Além de divertirem, também têm o poder de conectar pessoas, 
-      inspirar ideias e proporcionar momentos de lazer.`,
+      title: "Recomendações inteligentes para você",
+      text: `Cansado de perder tempo procurando o que ver? 
+      O REVISU analisa suas preferências, nota média das obras e destaque do público 
+      para sugerir opções que têm tudo a ver com o seu momento.`,
       image: "src/IMAGES/filmeCarrosel_suspense.jpg"
     },
     {
-      title: "Filmes e Séries",
-      text: `Basta informar suas preferências — como gêneros favoritos, atores, diretores ou até o idioma que mais te agrada — e o nosso sistema irá recomendar opções personalizadas 
-      para você. Com filtros inteligentes e sugestões baseadas no seu perfil, fica fácil descobrir novos títulos que têm tudo a ver com o que você gosta de assistir.`,
+      title: "Encontre sua próxima maratona",
+      text: `Filtre por gênero, tipo de obra, atores, diretores e muito mais. 
+      Transforme suas noites de filme em experiências melhores com indicações certeiras 
+      e um catálogo organizado do seu jeito.`,
       image: "src/IMAGES/filmeCarrosel_varios.jpg"
     }
   ];
+
 
   const visibleCount4 = 4;
   const visibleCount2 = 2;
@@ -124,11 +127,10 @@ function HomeREVISU() {
 
   return (
     <div className="home-container">
-
-      <div className="home-image"></div>
-
+      <div><h1>-</h1></div>
       <div className="home-content">
         <div className="carrousel-container">
+
           <button className="arrow left" onClick={prevSlideHome}>❮</button>
 
           <div className="slide">
@@ -141,6 +143,7 @@ function HomeREVISU() {
           </div>
 
           <button className="arrow right" onClick={nextSlideHome}>❯</button>
+
         </div>
 
         <div className="carrousel-obrasDesta">
@@ -173,10 +176,15 @@ function HomeREVISU() {
                   </div>
 
                   <div>
-                    <Link to="/sinopse-obra"> <button className="icon-btn sinopse-btn">
-                      <PiFilmReel className='icon' />
-                      <p style={{ marginLeft: '10px' }}>Sinopse</p>
-                    </button></Link>
+                    <div>
+                      <button
+                        className="icon-btn sinopse-btn"
+                        onClick={() => navigate("/sinopse-obra")}
+                      >
+                        <PiFilmReel className="icon" />
+                        <p style={{ marginLeft: "10px" }}>Sinopse</p>
+                      </button>
+                    </div>
 
                     <div style={{ display: marcado === true ? '' : 'none' }}>
                       <button className="icon-btn marcar-btn" style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}>
@@ -259,18 +267,20 @@ function HomeREVISU() {
 
                   <div style={{ width: '8%' }}>
                     <button className="icon-btn">
-                      <BsPersonBoundingBox className="icon" style={{ color: '#d8c415ff' }} />
+                      <BsPersonBoundingBox className="icon" onClick={() => navigate("/detalhe-cele-dire")} style={{ color: '#d8c415ff' }} />
                     </button>
 
-                    <div style={{ display: marcado === true ? '' : 'none' }}>
-                      <button className="icon-btn">
-                        <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
-                      </button>
-                    </div>
-                    <div style={{ display: marcado != true ? '' : 'none' }}>
-                      <button className="icon-btn">
-                        <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
-                      </button>
+                    <div style={{ marginTop: '10%' }}>
+                      <div style={{ display: marcado === true ? '' : 'none' }}>
+                        <button className="icon-btn">
+                          <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
+                        </button>
+                      </div>
+                      <div style={{ display: marcado != true ? '' : 'none' }}>
+                        <button className="icon-btn">
+                          <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -333,18 +343,20 @@ function HomeREVISU() {
 
                   <div style={{ width: '8%' }}>
                     <button className="icon-btn">
-                      <BsPersonBoundingBox className="icon" style={{ color: '#d8c415ff' }} />
+                      <BsPersonBoundingBox className="icon" onClick={() => navigate("/detalhe-cele-dire")} style={{ color: '#d8c415ff' }} />
                     </button>
 
-                    <div style={{ display: marcado === true ? '' : 'none' }}>
-                      <button className="icon-btn">
-                        <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
-                      </button>
-                    </div>
-                    <div style={{ display: marcado != true ? '' : 'none' }}>
-                      <button className="icon-btn">
-                        <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
-                      </button>
+                    <div style={{ marginTop: '10%' }}>
+                      <div style={{ display: marcado === true ? '' : 'none' }}>
+                        <button className="icon-btn">
+                          <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
+                        </button>
+                      </div>
+                      <div style={{ display: marcado != true ? '' : 'none' }}>
+                        <button className="icon-btn">
+                          <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -355,6 +367,7 @@ function HomeREVISU() {
           </div>
         </div>
       </div>
+      <div><h1>-</h1></div>
     </div >
   )
 }

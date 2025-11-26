@@ -1,30 +1,22 @@
+/* HOME */
 .home-container {
     position: relative;
     width: 100%;
-    min-height: 260vh;
-    isolation: isolate;
-}
-
-.home-image {
-    position: absolute;
-    top: -1.5%;
-    width: 100%;
-    height: 260vh;
+    min-height: 100%;
     background-image: url("../IMAGES/fundoSalaCinema.jpg");
     background-size: cover;
     background-position: center;
-    z-index: -1;
-    pointer-events: none;
+    background-attachment: fixed;
+    z-index: 0;
 }
 
 .home-content {
     position: relative;
-    z-index: 0;
+    z-index: 5;
 }
 
 /*CARROSEL PRINCIPAL ---------------------------------------------------------------------------------------------*/
 .carrousel-container {
-    margin-top: 35px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -124,30 +116,6 @@
     padding: 0 20px;
 }
 
-.card-obra {
-    background: rgba(0, 0, 0, 0.72);
-    border-radius: 15%;
-    padding: 10px;
-    text-align: center;
-    color: white;
-    box-shadow: 0px -10px 12px -4px #9A15D8;
-    height: 750px;
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
-    gap: 12px;
-}
-
-.card-obra>div:nth-child(2) {
-    height: 70px;
-}
-
-.card-obra>div:nth-child(3) {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 8px;
-}
-
 .slide-imageObras {
     margin-top: 5%;
     width: 70%;
@@ -192,12 +160,12 @@
 
 .container-carrousel-obrasDesta .arrow.left {
     left: 0;
-    transform: translate(-60%, -50%);
+    transform: translate(-100%, -50%);
 }
 
 .container-carrousel-obrasDesta .arrow.right {
     right: 0;
-    transform: translate(60%, -50%);
+    transform: translate(100%, -50%);
 }
 
 .container-carrousel-obrasDesta .arrow:hover {
@@ -238,25 +206,6 @@
     font-size: 20px;
 }
 
-/* responsivo */
-@media (max-width: 1024px) {
-    .slides-row {
-        grid-template-columns: repeat(2, 1fr);
-        /* 2 por vez */
-    }
-}
-
-@media (max-width: 600px) {
-    .slides-row {
-        grid-template-columns: 1fr;
-        /* 1 por vez */
-    }
-
-    .slide-imageObras {
-        height: 180px;
-    }
-}
-
 /*CARROSEL CELEBRIDADES---------------------------------------------------------------------------------------------*/
 .carrousel-celeDesta .titulo {
     margin-top: 3%;
@@ -292,19 +241,6 @@
     grid-auto-columns: 1fr;
     gap: 18px;
     padding: 0 20px;
-}
-
-.card-celeDesta {
-    background-color: rgba(0, 0, 0, 0.72);
-    border-radius: 14px;
-    padding: 12px;
-    color: white;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    height: 200px;
 }
 
 .foto-wrapper {
@@ -392,12 +328,12 @@
 
 .container-carrousel-celeDesta .arrow.left {
     left: 0;
-    transform: translate(-80%, -50%);
+    transform: translate(-200%, -50%);
 }
 
 .container-carrousel-celeDesta .arrow.right {
     right: 0;
-    transform: translate(70%, -50%);
+    transform: translate(200%, -50%);
 }
 
 .container-carrousel-celeDesta .arrow:hover {
@@ -422,19 +358,6 @@
 
 .container-carrousel-celeDesta .icon {
     font-size: 30px;
-}
-
-@media (max-width: 700px) {
-    .slides-grid-cele {
-        grid-template-rows: auto;
-        grid-auto-flow: row;
-        /* no mobile fica normal */
-        grid-template-columns: 1fr;
-    }
-
-    .card-cele {
-        flex-direction: row;
-    }
 }
 
 /*CARROSEL DIRETORES ---------------------------------------------------------------------------------------------*/
@@ -475,19 +398,6 @@
     padding: 0 50px;
 }
 
-.card-diretDesta {
-    background-color: rgba(0, 0, 0, 0.72);
-    ;
-    border-radius: 14px;
-    padding: 12px;
-    color: white;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
 .slide-imagediretDesta {
     width: 120px;
     height: 150px;
@@ -523,12 +433,12 @@
 
 .container-carrousel-diretDesta .arrow.left {
     left: 0;
-    transform: translate(-50%, -50%);
+    transform: translate(-70%, -110%);
 }
 
 .container-carrousel-diretDesta .arrow.right {
     right: 0;
-    transform: translate(50%, -50%);
+    transform: translate(50%, -110%);
 }
 
 .container-carrousel-diretDesta .arrow:hover {
@@ -555,15 +465,109 @@
     font-size: 30px;
 }
 
-@media (max-width: 700px) {
-    .slides-grid-diretDesta {
-        grid-template-rows: auto;
-        grid-auto-flow: row;
-        /* no mobile fica normal */
-        grid-template-columns: 1fr;
+/* CARDS ---------------------------------------------------------------------------------------------*/
+.card-obra {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 12px;
+}
+
+.card-obra>div:nth-child(2) {
+    height: 70px;
+}
+
+.card-obra>div:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.card-celeDesta {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    height: 200px;
+}
+
+.card-diretDesta {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    height: 200px;
+}
+
+.card-obra,
+.card-celeDesta,
+.card-diretDesta {
+    background: rgba(0, 0, 0, 0.72);
+    border-radius: 15%;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    box-shadow: 0px -10px 12px -4px #9A15D8;
+
+    /* ANIMAÇÃO */
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.card-celeDesta,
+.card-diretDesta {
+    border-radius: 14px;
+}
+
+/* Efeito ao passar o mouse */
+.card-obra:hover,
+.card-celeDesta:hover,
+.card-diretDesta:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 0 25px rgba(154, 21, 216, 0.9);
+    filter: brightness(1.05);
+}
+
+.card-obra::before,
+.card-celeDesta::before,
+.card-diretDesta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid transparent;
+    background: linear-gradient(120deg, #9A15D8, #000000, #9A15D8);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.card-obra:hover::before,
+.card-celeDesta:hover::before,
+.card-diretDesta:hover::before {
+    opacity: 1;
+    animation: borderGlow 5s linear infinite;
+}
+
+@keyframes borderGlow {
+    0% {
+        background-position: 0% 50%;
     }
 
-    .card-diretDesta {
-        flex-direction: row;
+    50% {
+        background-position: 100% 50%;
     }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.card-obra,
+.card-celeDesta,
+.card-diretDesta {
+    position: relative;
+    overflow: hidden;
 }

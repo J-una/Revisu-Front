@@ -1,24 +1,17 @@
 .cadastro-container {
     position: relative;
     width: 100%;
-    min-height: 90vh;
-    isolation: isolate;
-}
-
-.cadastro-image {
-    position: absolute;
-    width: 100%;
-    height: 90vh;
-    background-image: url("src/IMAGES/fundoLogin.jpg");
+    min-height: 100%;
+    background-image: url("../IMAGES/fundoLogin.jpg");
     background-size: cover;
     background-position: center;
-    z-index: -1;
-    pointer-events: none;
+    background-attachment: fixed;
+    z-index: 0;
 }
 
 .cadastro-content {
     position: relative;
-    z-index: 0;
+    z-index: 5;
     display: flex;
     justify-content: center;
     align-items: center;

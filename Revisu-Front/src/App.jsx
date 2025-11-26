@@ -9,6 +9,7 @@ import ParaVoceREVISU from "./paravoceREVISU/index.jsx"
 //import PesquisarREVISU from "./pesquisarREVISU/index.jsx"
 import SobrenosREVISU from "./sobrenosREVISU/index.jsx"
 import SinopseobraREVISU from "./sinopseObraREVISU/index.jsx"
+import DetalheCeleDireREVISU from "./detalheCeleDireREVISU/index.jsx"
 // importe outras páginas aqui quando existir
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/para-voce" element={<ParaVoceREVISU />} />
                 <Route path="/sobre-nos" element={<SobrenosREVISU />} />
                 <Route path="/sinopse-obra" element={<SinopseobraREVISU />} />
+                <Route path="/detalhe-cele-dire" element={<DetalheCeleDireREVISU />} />
             </Route>
 
             <Route path="*" element={<h1>Página não encontrada</h1>} />

@@ -12,7 +12,7 @@ function cadastroREVISU() {
             <div className="cadastro-image"></div>
 
             <div className="cadastro-content">
-                <div className="cadastro-card" style={{ marginTop: '5%' }}>
+                <div className="cadastro-card" style={{ marginTop: '6%', marginBottom: '6%' }}>
 
                     {/* LADO ESQUERDO (placeholder branco com logo) */}
                     <div className="cadastro-left">
