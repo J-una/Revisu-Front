@@ -1,15 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/layout.jsx";
-import HomeREVISU from "./homeREVISU/index.jsx";
-import BibliotecaREVISU from "./bibliotecaREVISU/index.jsx";
-import EntrarREVISU from "./entrarREVISU/index.jsx"
-import CadastroREVISU from "./cadastroREVISU/index.jsx"
-import EditarREVISU from "./editarREVISU/index.jsx"
-import ParaVoceREVISU from "./paravoceREVISU/index.jsx"
+import HomeREVISU from "./paginas/homeREVISU/index.jsx";
+import BibliotecaREVISU from "./paginas/bibliotecaREVISU/index.jsx";
+import EntrarREVISU from "./paginas/entrarREVISU/index.jsx"
+import CadastroREVISU from "./paginas/cadastroREVISU/index.jsx"
+import EditarREVISU from "./paginas/editarREVISU/index.jsx"
+import ParaVoceREVISU from "./paginas/paravoceREVISU/index.jsx"
 //import PesquisarREVISU from "./pesquisarREVISU/index.jsx"
-import SobrenosREVISU from "./sobrenosREVISU/index.jsx"
-import SinopseobraREVISU from "./sinopseObraREVISU/index.jsx"
-import DetalheCeleDireREVISU from "./detalheCeleDireREVISU/index.jsx"
+import SobrenosREVISU from "./paginas/sobrenosREVISU/index.jsx"
+import SinopseobraREVISU from "./paginas/sinopseObraREVISU/index.jsx"
+import DetalheCeleDireREVISU from "./paginas/detalheCeleDireREVISU/index.jsx"
 // importe outras páginas aqui quando existir
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
                 <Route path="/editar" element={<EditarREVISU />} />
                 <Route path="/para-voce" element={<ParaVoceREVISU />} />
                 <Route path="/sobre-nos" element={<SobrenosREVISU />} />
-                <Route path="/sinopse-obra" element={<SinopseobraREVISU />} />
+                <Route path="/sinopse-obra/:idObra" element={<SinopseobraREVISU />} />
                 <Route path="/detalhe-cele-dire" element={<DetalheCeleDireREVISU />} />
             </Route>
 

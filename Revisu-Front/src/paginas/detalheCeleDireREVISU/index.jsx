@@ -2,24 +2,24 @@ import { useState, useEffect } from 'react'
 import { LuScissorsLineDashed } from "react-icons/lu";
 import { RiFilmAiLine } from "react-icons/ri";
 import { PiFilmReel } from "react-icons/pi";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaMale, FaFemale } from "react-icons/fa";
 import { CiImageOff } from "react-icons/ci";
 import { BsFillPersonCheckFill, BsFillPersonDashFill, BsPersonBoundingBox } from "react-icons/bs";
 import './style.css'
-import { slideObra } from "../dados/slideObra.js";
-import { slideCelebridade } from "../dados/slideCelebridades.js";
-import { sinopseObra } from "../dados/sinopseObra.js";
-import { generoColors } from "../dados/generoColors.js";
+import { slideObra } from "../../dados/slideObra.js";
+import { slideCelebridade } from "../../dados/slideCelebridades.js";
+import { detalheCeleDire } from "../../dados/detalheCeleDire.js";
+import { generoColors } from "../../dados/generoColors.js";
 import { Link } from "react-router-dom";
 
-function SinopseObraREVISU() {
+function DetalheCeleDireREVISU() {
     const [indexCarroselObra, setIndexCarroselObra] = useState(0);
     const [indexCarroselCele, setIndexCarroselCele] = useState(0);
     const [slidesObra, setSlideObra] = useState(slideObra)
-    const [slidesCelebridades, setSlidesCelebridades] = useState(sinopseObra.atores || [])
+    const [slidesCelebridades, setSlidesCelebridades] = useState(slideCelebridade)
     const [marcado, setMarcado] = useState(true);
     const generosColors = generoColors;
-    const sinopsesObra = sinopseObra;
+    const detalhesCeleDire = detalheCeleDire
 
     function arredondarNota(nota) {
         const primeiraCasa = Math.floor(nota * 10) / 10;
@@ -30,6 +30,13 @@ function SinopseObraREVISU() {
         }
 
         return primeiraCasa.toFixed(1);
+    }
+
+    function formatarData(dateStr) {
+        if (!dateStr) return "Data desconhecida";
+
+        const [ano, mes, dia] = dateStr.split("-");
+        return `${dia}/${mes}/${ano}`; // dd/mm/yyyy
     }
 
     const visibleCount4 = 4;
@@ -66,34 +73,41 @@ function SinopseObraREVISU() {
         });
     }
 
-    useEffect(() => {
-        setSlidesCelebridades(sinopsesObra.atores || []);
-    }, [sinopsesObra]);
-
     return (
-        <div className="sinopse-container">
+        <div className="detalheCeleDire-container">
             <div><h1>-</h1></div>
-            <div className="sinopse-content">
-                {/* ====== TOPO / SINOPSE DA OBRA ====== */}
-                <div className="sinopse-top">
+            <div className="detalheCeleDire-content">
+                {/* ====== TOPO / detalheCeleDire DA OBRA ====== */}
+                <div className="detalheCeleDire-top">
                     {/* COLUNA ESQUERDA */}
-                    <div className="sinopse-left">
-
+                    <div className="detalheCeleDire-left">
                         <div className="poster-card" style={{
                             boxShadow: marcado ? '0px -10px 12px -4px #9A15D8' : '0px -10px 12px -4px #4cd815'
                         }}>
                             <img
                                 className="poster-img"
-                                src={`https://image.tmdb.org/t/p/w500/${sinopsesObra.imagem}`}
-                                alt={sinopsesObra.titulo}
+                                src={`https://image.tmdb.org/t/p/w500/${detalhesCeleDire.profile_path}`}
+                                alt={detalhesCeleDire.name}
                             />
 
-                            <div className="poster-info">
-                                <p className="poster-rating">
-                                    <FaStar className="star-icon" />
-                                    {arredondarNota(sinopsesObra.notaMedia)}
-                                </p>
+                            {/* ÍCONE DE GÊNERO */}
+                            <div className="poster-gender">
+                                {detalhesCeleDire.gender === 1 && (
+                                    <div className="gender-chip female">
+                                        <FaFemale className="gender-icon" />
+                                        <span>Feminino</span>
+                                    </div>
+                                )}
 
+                                {detalhesCeleDire.gender === 2 && (
+                                    <div className="gender-chip male">
+                                        <FaMale className="gender-icon" />
+                                        <span>Masculino</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="poster-info">
                                 {/* botão marcar/desmarcar */}
                                 <div className="poster-button">
                                     {marcado ? (
@@ -118,60 +132,48 @@ function SinopseObraREVISU() {
                                 </div>
                             </div>
                         </div>
-
-                        {/* estrelas de avaliação (visual apenas) */}
-                        <div className="stars-row">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                                <FaStar key={i} className="star-outline" />
-                            ))}
-                        </div>
-
                     </div>
 
                     {/* COLUNA DIREITA */}
-                    <div className="sinopse-right">
-                        <h2 className="sinopse-title">{sinopsesObra.titulo}</h2>
+                    <div className="detalheCeleDire-right">
+                        <h2 className="detalheCeleDire-title">{detalhesCeleDire.name}</h2>
 
-                        <div className="sinopse-block">
-                            <p className="sinopse-label">SINOPSE:</p>
-                            <p className="sinopse-text">
-                                {sinopsesObra.sinopse}
+                        <div className="detalheCeleDire-block">
+                            <p className="detalheCeleDire-label">BIOGRAFIA:</p>
+                            <p className="detalheCeleDire-text">
+                                {detalhesCeleDire.biography}
                             </p>
-                        </div>
 
-                        {/* chips de gêneros */}
-                        <div className="sinopse-generos">
-                            <p className="sinopse-label">GÊNEROS:</p>
-                            {sinopsesObra.generos?.map((g, idx) => (
-                                <span
-                                    key={idx}
-                                    className="genero-chip"
-                                    style={{ borderColor: generosColors[g] || "#9A15D8" }}
-                                >
-                                    {g}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+                            {/* BLOCO DE DATAS */}
+                            <div className="detalheCeleDire-dates">
+                                <div className="date-item">
+                                    <span className="date-label">Nascimento</span>
+                                    <span className="date-value">
+                                        {formatarData(detalhesCeleDire.birthday)}
+                                    </span>
+                                </div>
 
-                {/* comentário */}
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <div className="comentario-box">
-                        <label>Comentário:</label>
-                        <textarea placeholder="comente o que achou da obra"></textarea>
-                        <button className="comentario-btn">Enviar</button>
+                                <div className="date-item">
+                                    <span className="date-label">Falecimento</span>
+                                    <span className="date-value">
+                                        {detalhesCeleDire.deathday
+                                            ? formatarData(detalhesCeleDire.deathday)
+                                            : "Não morreu"}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div className="carrousel-celeDesta">
                     <div className="titulo">
-                        <p style={{ color: '#9A15D8', marginLeft: '10px' }}>ELENCO</p>
-                        <p style={{ marginLeft: '10px' }}>EM DESTAQUE:</p>
+                        <p style={{ color: '#9A15D8', marginLeft: '10px' }}>CELEBRIDADES</p>
+                        <p style={{ marginLeft: '10px' }}>RELACIONADAS:</p>
                     </div>
 
                     <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-                        <p>Atores e Atrizes do filme em destaque.</p>
+                        <p>Atores e Atrizes que associam com a celebridade em destaque.</p>
                     </div>
 
                     <div className="container-carrousel-celeDesta">
@@ -248,7 +250,7 @@ function SinopseObraREVISU() {
                     </div>
 
                     <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-                        <p>Obras relacionados ao filme em destaque.</p>
+                        <p>Obras relacionados a celebridade em destaque.</p>
                     </div>
 
                     <div className="container-carrousel-obrasDesta">
@@ -271,7 +273,7 @@ function SinopseObraREVISU() {
                                     </div>
 
                                     <div>
-                                        <Link to="/sinopse-obra"> <button className="icon-btn sinopse-btn">
+                                        <Link to="/sinopse-obra"> <button className="icon-btn detalheCeleDire-btn">
                                             <PiFilmReel className='icon' />
                                             <p style={{ marginLeft: '10px' }}>Sinopse</p>
                                         </button></Link>
@@ -307,4 +309,4 @@ function SinopseObraREVISU() {
         </div >
     );
 }
-export default SinopseObraREVISU
+export default DetalheCeleDireREVISU

@@ -6,10 +6,10 @@ import { FaStar } from "react-icons/fa";
 import { CiImageOff } from "react-icons/ci";
 import { BsFillPersonCheckFill, BsFillPersonDashFill, BsPersonBoundingBox } from "react-icons/bs";
 import './style.css'
-import { slideObra } from "../dados/slideObra.js";
-import { slideCelebridade } from "../dados/slideCelebridades.js";
-import { slideDiretore } from "../dados/slideDiretor.js";
-import { generoColors } from "../dados/generoColors.js";
+import { slideObra } from "../../dados/slideObra.js";
+import { slideCelebridade } from "../../dados/slideCelebridades.js";
+import { slideDiretore } from "../../dados/slideDiretor.js";
+import { generoColors } from "../../dados/generoColors.js";
 import { useNavigate } from "react-router-dom";
 
 function HomeREVISU() {
@@ -179,7 +179,7 @@ function HomeREVISU() {
                     <div>
                       <button
                         className="icon-btn sinopse-btn"
-                        onClick={() => navigate("/sinopse-obra")}
+                        onClick={() => navigate("/sinopse-obra/" + slide.idObra)}
                       >
                         <PiFilmReel className="icon" />
                         <p style={{ marginLeft: "10px" }}>Sinopse</p>

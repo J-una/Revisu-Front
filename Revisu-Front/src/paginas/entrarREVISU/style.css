@@ -1,0 +1,156 @@
+.login-container {
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+    background-image: url("../../IMAGES/fundoLogin.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: 0;
+}
+
+.login-content {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-page {
+    height: 100vh;
+    width: 100vw;
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+.login-card {
+    width: min(680px, 92vw);
+    padding: 40px 50px;
+    border-radius: 28px;
+    background: rgba(0, 0, 0, 0.72);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.login-title {
+    text-align: center;
+    font-size: 56px;
+    letter-spacing: 2px;
+    color: #9A15D8;
+    margin-bottom: 8px;
+    font-family: "Segoe UI", sans-serif;
+    font-weight: 800;
+}
+
+.login-label {
+    font-size: 16px;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-left: 8px;
+}
+
+.senha-label {
+    margin-top: 6px;
+}
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.login-input {
+    width: 100%;
+    height: 64px;
+    border-radius: 999px;
+    border: none;
+    outline: none;
+    padding: 0 56px 0 18px;
+    font-size: 18px;
+    background: white;
+    color: #000;
+    box-shadow: -8px 0 12px -2px #9A15D8;
+    ;
+}
+
+.eye-btn {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    font-size: 18px;
+}
+
+/* .login-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+} */
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.remember input {
+    accent-color: #9A15D8;
+    width: 15px;
+    height: 15px;
+}
+
+.forgot {
+    font-size: 14px;
+    color: #cfcfcf;
+    text-decoration: none;
+}
+
+.forgot:hover {
+    color: #9A15D8;
+}
+
+.login-btn {
+    margin-top: 6px;
+    width: 100%;
+    height: 52px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: rgba(118, 28, 160, 0.72);
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    transition: 0.25s;
+}
+
+.login-btn:hover {
+    background: #9A15D8;
+}
+
+.signup {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.signup a {
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.signup a:hover {
+    color: #9A15D8;
+}

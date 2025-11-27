@@ -6,10 +6,10 @@ import { FaStar } from "react-icons/fa";
 import { BsFillPersonCheckFill, BsFillPersonDashFill, BsPersonBoundingBox } from "react-icons/bs";
 import { CiImageOff } from "react-icons/ci";
 import './style.css'
-import { slideObra } from "../dados/slideObra.js";
-import { slideCelebridade } from "../dados/slideCelebridades.js";
-import { slideDiretore } from "../dados/slideDiretor.js";
-import { generoColors } from "../dados/generoColors.js";
+import { slideObra } from "../../dados/slideObra.js";
+import { slideCelebridade } from "../../dados/slideCelebridades.js";
+import { slideDiretore } from "../../dados/slideDiretor.js";
+import { generoColors } from "../../dados/generoColors.js";
 
 function bibliotecaREVISU() {
     const [indexCarroselHome, setIndexCarroselHome] = useState(0);
