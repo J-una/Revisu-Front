@@ -299,7 +299,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    max-height: 118px;
+    max-height: 110px;
     overflow: hidden;
     position: relative;
 }
