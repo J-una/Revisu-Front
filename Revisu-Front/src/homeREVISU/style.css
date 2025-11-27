@@ -433,12 +433,12 @@
 
 .container-carrousel-diretDesta .arrow.left {
     left: 0;
-    transform: translate(-70%, -110%);
+    transform: translate(-70%, -50%);
 }
 
 .container-carrousel-diretDesta .arrow.right {
     right: 0;
-    transform: translate(50%, -110%);
+    transform: translate(50%, -50%);
 }
 
 .container-carrousel-diretDesta .arrow:hover {
