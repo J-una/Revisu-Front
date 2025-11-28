@@ -20,7 +20,7 @@ function HomeREVISU() {
   const [slidesObra, setSlideObra] = useState(slideObra)
   const [slidesCelebridades, setSlidesCelebridades] = useState(slideCelebridade)
   const [slidesDiretores, setSlidesDiretores] = useState(slideDiretore)
-  const [marcado, setMarcado] = useState(true);
+  const [marcado, setMarcado] = useState(false);
   const generosColors = generoColors;
   const navigate = useNavigate();
 
@@ -149,7 +149,7 @@ function HomeREVISU() {
         <div className="carrousel-obrasDesta">
           <div className="titulo">
             <p style={{ color: '#9A15D8', marginLeft: '10px' }}>OBRAS</p>
-            <p style={{ marginLeft: '10px' }}>EM DESTAQUE:</p>
+            <p style={{ marginLeft: '10px' }}>EM DESTAQUE</p>
           </div>
 
           <div style={{ marginTop: '10px', marginLeft: '5%' }}>
@@ -161,7 +161,10 @@ function HomeREVISU() {
 
             <div className="slides-row">
               {getVisibleSlidesObras().map((slide) => (
-                <div className="card-obra" key={slide._i} style={{ boxShadow: marcado != true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8' }}>
+                <div className="card-obra" key={slide._i} style={{
+                  boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8',
+                  border: marcado == true ? '2px solid #4cd815' : '2px solid #9a15d8'
+                }}>
 
                   <div >
                     <img
@@ -186,14 +189,14 @@ function HomeREVISU() {
                       </button>
                     </div>
 
-                    <div style={{ display: marcado === true ? '' : 'none' }}>
+                    <div style={{ display: marcado === true ? 'none' : '' }}>
                       <button className="icon-btn marcar-btn" style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}>
                         <RiFilmAiLine className='icon' />
                         <p style={{ marginLeft: '10px' }}>Marcar</p>
                       </button>
                     </div>
 
-                    <div style={{ display: marcado !== true ? '' : 'none' }}>
+                    <div style={{ display: marcado !== true ? 'none' : '' }}>
                       <button className="icon-btn desmarcar-btn" style={{ boxShadow: '1px 1px 10px 1px #9A15D8' }}>
                         <LuScissorsLineDashed className='icon' />
                         <p style={{ marginLeft: '10px' }}>Desmarcar</p>
@@ -217,7 +220,7 @@ function HomeREVISU() {
 
           <div className="titulo">
             <p style={{ color: '#9A15D8', marginLeft: '10px' }}>CELEBRIDADES</p>
-            <p style={{ marginLeft: '10px' }}>EM DESTAQUE:</p>
+            <p style={{ marginLeft: '10px' }}>EM DESTAQUE</p>
           </div>
 
           <div style={{ marginTop: '10px', marginLeft: '5%' }}>
@@ -229,7 +232,10 @@ function HomeREVISU() {
 
             <div className="slides-grid-celeDesta">
               {getVisibleSlidesCelebridades().map((cele) => (
-                <div className="card-celeDesta" key={cele._i} style={{ boxShadow: marcado != true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
+                <div className="card-celeDesta" key={cele._i} style={{
+                  boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8',
+                  border: marcado == true ? '2px solid #4cd815' : '2px solid #9a15d8'
+                }}>
 
                   <div className="foto-wrapper">
                     {cele.foto ? (
@@ -271,12 +277,12 @@ function HomeREVISU() {
                     </button>
 
                     <div style={{ marginTop: '10%' }}>
-                      <div style={{ display: marcado === true ? '' : 'none' }}>
+                      <div style={{ display: marcado === true ? 'none' : '' }}>
                         <button className="icon-btn">
                           <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
                         </button>
                       </div>
-                      <div style={{ display: marcado != true ? '' : 'none' }}>
+                      <div style={{ display: marcado != true ? 'none' : '' }}>
                         <button className="icon-btn">
                           <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
                         </button>
@@ -294,7 +300,7 @@ function HomeREVISU() {
         <div className="carrousel-diretDesta">
           <div className="titulo">
             <p style={{ color: '#9A15D8', marginLeft: '10px' }}>DIRETORES</p>
-            <p style={{ marginLeft: '10px' }}>EM DESTAQUE:</p>
+            <p style={{ marginLeft: '10px' }}>EM DESTAQUE</p>
           </div>
 
           <div style={{ marginTop: '10px', marginLeft: '5%' }}>
@@ -306,7 +312,10 @@ function HomeREVISU() {
 
             <div className="slides-grid-diretDesta">
               {getVisibleSlidesDiretores().map((dire) => (
-                <div className="card-diretDesta" key={dire._i} style={{ boxShadow: marcado != true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
+                <div className="card-diretDesta" key={dire._i} style={{
+                  boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8',
+                  border: marcado == true ? '2px solid #4cd815' : '2px solid #9a15d8'
+                }}>
 
                   <div className="foto-wrapper" style={{ width: '15%' }}>
                     {dire.foto ? (
@@ -347,12 +356,12 @@ function HomeREVISU() {
                     </button>
 
                     <div style={{ marginTop: '10%' }}>
-                      <div style={{ display: marcado === true ? '' : 'none' }}>
+                      <div style={{ display: marcado == true ? 'none' : '' }}>
                         <button className="icon-btn">
                           <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
                         </button>
                       </div>
-                      <div style={{ display: marcado != true ? '' : 'none' }}>
+                      <div style={{ display: marcado != true ? 'none' : '' }}>
                         <button className="icon-btn">
                           <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
                         </button>

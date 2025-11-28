@@ -16,21 +16,38 @@
 
 .tituloBiblioteca {
     color: #9A15D8;
-    margin-left: 2.5%;
-    font-size: 10px;
+    background: linear-gradient(135deg,
+            rgba(0, 0, 0, 0.72),
+            rgba(25, 0, 35, 0.9));
+    font-size: 22px;
     font-family: Georgia, 'Times New Roman', Times, serif;
-    width: 21%;
-    border-radius: 80px;
-    box-shadow: -8px 0 12px -2px #9A15D8;
+
+    padding: 10px 30px;
+    border-radius: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* animação de brilho */
+    box-shadow: 0 0 12px -2px #9A15D8;
+    animation: pulseGlow 2.5s infinite ease-in-out;
+
+    /* animação de entrada */
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeSlide 1s forwards ease-out;
 }
+
 
 .generosPreferidos .titulo {
     margin-top: 3%;
     margin-left: 3%;
-    display: flex;
-    width: 14%;
+    display: inline-flex;
+    width: fit-content;
     border-radius: 80px;
     box-shadow: -8px 0 12px -2px #9A15D8;
+    padding: 4px 10px;
+    border: 2px solid #9a15d8;
 }
 
 .generosPreferidos p {

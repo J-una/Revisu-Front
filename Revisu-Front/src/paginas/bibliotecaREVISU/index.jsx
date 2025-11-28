@@ -198,9 +198,9 @@ function bibliotecaREVISU() {
             <div><h1>-</h1></div>
             <div className="biblioteca-content">
 
-                <div className='tituloBiblioteca'>
-                    <div style={{ marginTop: '15px' }}>
-                        <h1 style={{ marginLeft: '15px' }}>MINHA BIBLIOTECA</h1>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div className='tituloBiblioteca'>
+                        <h1>MINHA BIBLIOTECA</h1>
                     </div>
                 </div>
 
@@ -235,7 +235,7 @@ function bibliotecaREVISU() {
                     </div>
 
                     <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-                        <p>Principais filmes de acordo com suas preferências.</p>
+                        <p>Principais filmes marcados.</p>
                     </div>
 
                     <div className="container-carrousel-obrasDesta">
@@ -298,7 +298,7 @@ function bibliotecaREVISU() {
                     </div>
 
                     <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-                        <p>Atores e Atrizes de acordo com suas preferências.</p>
+                        <p>Principais Atores e Atrizes marcados.</p>
                     </div>
 
                     <div className="container-carrousel-celeDesta">
@@ -375,7 +375,7 @@ function bibliotecaREVISU() {
                     </div>
 
                     <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-                        <p>Diretores de acordo com suas preferências.</p>
+                        <p>Principais Diretores marcados.</p>
                     </div>
 
                     <div className="container-carrousel-diretDesta">

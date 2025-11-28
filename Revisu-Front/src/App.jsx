@@ -1,5 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/layout.jsx";
+import StartquizREVISU from "./paginas/startquizREVISU/index.jsx";
+import QuizREVISU from "./paginas/quizREVISU/index.jsx";
 import HomeREVISU from "./paginas/homeREVISU/index.jsx";
 import BibliotecaREVISU from "./paginas/bibliotecaREVISU/index.jsx";
 import EntrarREVISU from "./paginas/entrarREVISU/index.jsx"
@@ -13,13 +15,15 @@ import DetalheCeleDireREVISU from "./paginas/detalheCeleDireREVISU/index.jsx"
 // importe outras páginas aqui quando existir
 
 function App() {
-    const logado = true; // depois coloca seu estado real
+    const logado = true; // logado na toolbar
 
     return (
         <Routes>
             {/* Rota PAI com o Layout */}
             <Route element={<Layout logado={logado} />}>
                 {/* Rotas FILHAS (todas terão toolbar) */}
+                <Route path="/start-quiz" element={<StartquizREVISU />} />
+                <Route path="/quiz" element={<QuizREVISU />} />
                 <Route path="/home" element={<HomeREVISU />} />
                 <Route path="/biblioteca" element={<BibliotecaREVISU />} />
                 <Route path="/login" element={<EntrarREVISU />} />

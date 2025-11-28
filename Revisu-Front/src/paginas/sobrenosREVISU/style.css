@@ -1,0 +1,15 @@
+.sobrenos-container {
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+    background-image: url("../../IMAGES/fundoSalaCinema.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: 0;
+}
+
+.sobrenos-content {
+    position: relative;
+    z-index: 5;
+}
