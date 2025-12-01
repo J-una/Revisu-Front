@@ -83,28 +83,33 @@ function bibliotecaREVISU() {
     }
 
     const generoColorsBiblioteca = [
-        { genero: "História", cor: "#E67E22", },
-        { genero: "Terror", cor: "#A568C8", },
-        { genero: "Música", cor: "#59b680ff", },
-        { genero: "Mistério", cor: "#C014B5", },
-        { genero: "Romance", cor: "#B92F2F", },
-        { genero: "Ficção científica", cor: "#00BCD4", },
-        { genero: "Cinema TV", cor: "#3498DB", },
-        { genero: "Thriller", cor: "#17f5e2ff", },
-        { genero: "Guerra", cor: "#26a93cff", },
-        { genero: "Faroeste", cor: "#D35400", },
-        { genero: "Ação e Aventura", cor: "#688EC8", },
-        { genero: "Crime", cor: "#2740aeff", },
-        { genero: "Documentário", cor: "#ce17b5ff", },
-        { genero: "Drama", cor: "#5D6D7E", },
-        { genero: "Família", cor: "#7e5d7eff", },
-        { genero: "Infantil", cor: "#F1C40F", },
-        { genero: "Notícias", cor: "#95A5A6", },
-        { genero: "Reality", cor: "#FFFFFF", },
-        { genero: "Ficção Científica e Fantasia", cor: "#68C879", },
-        { genero: "Novela", cor: "#E69A9A", },
-        { genero: "Talk Show", cor: "#EEFF00", },
-        { genero: "Guerra e Política", cor: "#566573" },
+        { genero: "Ação", cor: "#E74C3C" },
+        { genero: "Aventura", cor: "#F39C12" },
+        { genero: "Animação", cor: "#9B59B6" },
+        { genero: "Comédia", cor: "#d6af12ff" },
+        { genero: "Crime", cor: "#2C3E50" },
+        { genero: "Documentário", cor: "#8E44AD" },
+        { genero: "Drama", cor: "#5D6D7E" },
+        { genero: "Família", cor: "#7E5D7E" },
+        { genero: "Fantasia", cor: "#23c240ff" },
+        { genero: "História", cor: "#E67E22" },
+        { genero: "Terror", cor: "#A568C8" },
+        { genero: "Música", cor: "#59B680" },
+        { genero: "Mistério", cor: "#C014B5" },
+        { genero: "Romance", cor: "#B92F2F" },
+        { genero: "Ficção científica", cor: "#00BCD4" },
+        { genero: "Cinema TV", cor: "#3498DB" },
+        { genero: "Thriller", cor: "#17F5E2" },
+        { genero: "Guerra", cor: "#26A93C" },
+        { genero: "Faroeste", cor: "#D35400" },
+        { genero: "Ação e Aventura", cor: "#688EC8" },
+        { genero: "Infantil", cor: "#F1C40F" },
+        { genero: "Notícias", cor: "#95A5A6" },
+        { genero: "Reality", cor: "#FFFFFF" },
+        { genero: "Ficção Científica e Fantasia", cor: "#68C879" },
+        { genero: "Novela", cor: "#E69A9A" },
+        { genero: "Talk Show", cor: "#EEFF00" },
+        { genero: "Guerra e Política", cor: "#566573" }
     ];
 
     const generoQtd = [
@@ -243,7 +248,10 @@ function bibliotecaREVISU() {
 
                         <div className="slides-row">
                             {getVisibleSlidesObras().map((slide) => (
-                                <div className="card-obra" key={slide._i} style={{ boxShadow: marcado != true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8' }}>
+                                <div className="card-obra" key={slide._i} style={{
+                                    boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8',
+                                    border: marcado == true ? '2px solid #4cd815' : '2px solid #9a15d8'
+                                }}>
 
                                     <div >
                                         <img
@@ -258,19 +266,24 @@ function bibliotecaREVISU() {
                                     </div>
 
                                     <div>
-                                        <button className="icon-btn sinopse-btn">
-                                            <PiFilmReel className='icon' />
-                                            <p style={{ marginLeft: '10px' }}>Sinopse</p>
-                                        </button>
+                                        <div>
+                                            <button
+                                                className="icon-btn sinopse-btn"
+                                                onClick={() => navigate("/sinopse-obra/" + slide.idObra)}
+                                            >
+                                                <PiFilmReel className="icon" />
+                                                <p style={{ marginLeft: "10px" }}>Sinopse</p>
+                                            </button>
+                                        </div>
 
-                                        <div style={{ display: marcado === true ? '' : 'none' }}>
+                                        <div style={{ display: marcado === true ? 'none' : '' }}>
                                             <button className="icon-btn marcar-btn" style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}>
                                                 <RiFilmAiLine className='icon' />
                                                 <p style={{ marginLeft: '10px' }}>Marcar</p>
                                             </button>
                                         </div>
 
-                                        <div style={{ display: marcado !== true ? '' : 'none' }}>
+                                        <div style={{ display: marcado !== true ? 'none' : '' }}>
                                             <button className="icon-btn desmarcar-btn" style={{ boxShadow: '1px 1px 10px 1px #9A15D8' }}>
                                                 <LuScissorsLineDashed className='icon' />
                                                 <p style={{ marginLeft: '10px' }}>Desmarcar</p>
@@ -306,7 +319,10 @@ function bibliotecaREVISU() {
 
                         <div className="slides-grid-celeDesta">
                             {getVisibleSlidesCelebridades().map((cele) => (
-                                <div className="card-celeDesta" key={cele._i} style={{ boxShadow: marcado != true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
+                                <div className="card-celeDesta" key={cele._i} style={{
+                                    boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8',
+                                    border: marcado == true ? '2px solid #4cd815' : '2px solid #9a15d8'
+                                }}>
 
                                     <div className="foto-wrapper">
                                         {cele.foto ? (
@@ -344,16 +360,16 @@ function bibliotecaREVISU() {
 
                                     <div style={{ width: '8%' }}>
                                         <button className="icon-btn">
-                                            <BsPersonBoundingBox className="icon" style={{ color: '#d8c415ff' }} />
+                                            <BsPersonBoundingBox className="icon" onClick={() => navigate("/detalhe-cele-dire")} style={{ color: '#d8c415ff' }} />
                                         </button>
 
                                         <div style={{ marginTop: '10%' }}>
-                                            <div style={{ display: marcado === true ? '' : 'none' }}>
+                                            <div style={{ display: marcado === true ? 'none' : '' }}>
                                                 <button className="icon-btn">
                                                     <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
                                                 </button>
                                             </div>
-                                            <div style={{ display: marcado != true ? '' : 'none' }}>
+                                            <div style={{ display: marcado != true ? 'none' : '' }}>
                                                 <button className="icon-btn">
                                                     <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
                                                 </button>
@@ -371,7 +387,7 @@ function bibliotecaREVISU() {
                 <div className="carrousel-diretDesta">
                     <div className="titulo">
                         <p style={{ color: '#9A15D8', marginLeft: '10px' }}>DIRETORES</p>
-                        <p style={{ marginLeft: '10px' }}>PREFERIDOS:</p>
+                        <p style={{ marginLeft: '10px' }}>EM DESTAQUE</p>
                     </div>
 
                     <div style={{ marginTop: '10px', marginLeft: '5%' }}>
@@ -383,7 +399,10 @@ function bibliotecaREVISU() {
 
                         <div className="slides-grid-diretDesta">
                             {getVisibleSlidesDiretores().map((dire) => (
-                                <div className="card-diretDesta" key={dire._i} style={{ boxShadow: marcado != true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
+                                <div className="card-diretDesta" key={dire._i} style={{
+                                    boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8',
+                                    border: marcado == true ? '2px solid #4cd815' : '2px solid #9a15d8'
+                                }}>
 
                                     <div className="foto-wrapper" style={{ width: '15%' }}>
                                         {dire.foto ? (
@@ -420,16 +439,16 @@ function bibliotecaREVISU() {
 
                                     <div style={{ width: '8%' }}>
                                         <button className="icon-btn">
-                                            <BsPersonBoundingBox className="icon" style={{ color: '#d8c415ff' }} />
+                                            <BsPersonBoundingBox className="icon" onClick={() => navigate("/detalhe-cele-dire")} style={{ color: '#d8c415ff' }} />
                                         </button>
 
                                         <div style={{ marginTop: '10%' }}>
-                                            <div style={{ display: marcado === true ? '' : 'none' }}>
+                                            <div style={{ display: marcado == true ? 'none' : '' }}>
                                                 <button className="icon-btn">
                                                     <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
                                                 </button>
                                             </div>
-                                            <div style={{ display: marcado != true ? '' : 'none' }}>
+                                            <div style={{ display: marcado != true ? 'none' : '' }}>
                                                 <button className="icon-btn">
                                                     <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
                                                 </button>

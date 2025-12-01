@@ -20,7 +20,7 @@ function HomeREVISU() {
   const [slidesObra, setSlideObra] = useState(slideObra)
   const [slidesCelebridades, setSlidesCelebridades] = useState(slideCelebridade)
   const [slidesDiretores, setSlidesDiretores] = useState(slideDiretore)
-  const [marcado, setMarcado] = useState(false);
+  const [marcado, setMarcado] = useState(true);
   const generosColors = generoColors;
   const navigate = useNavigate();
 

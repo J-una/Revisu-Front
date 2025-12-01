@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { FaCog, FaUser } from "react-icons/fa";
+import { ImExit } from "react-icons/im";
 import "../index.css";
 
 export default function Toolbar({ logado }) {
@@ -27,11 +28,14 @@ export default function Toolbar({ logado }) {
 
             <nav className="nav-right">
                 <button className="icon-btn" onClick={() => navigate("/editar")}><FaCog className="icon" /></button>
-                <FaUser className="icon" style={{ marginTop: '7%' }} />
-                <div style={{ display: logado === true ? "none" : "", marginTop: '7%' }}>
+                <div style={{ display: logado === false ? "none" : "" }}>
+                    <button className="icon-btn" onClick={() => navigate("/editar")}><ImExit className="icon" /></button>
+                </div>
+                <FaUser className="icon" style={{ marginTop: '5%' }} />
+                <div style={{ display: logado === true ? "none" : "", marginTop: '5%' }}>
                     <Link to="/login">Entrar</Link>
                 </div>
-                <div style={{ display: logado === false ? "none" : "", marginTop: '7%' }}>
+                <div style={{ display: logado === false ? "none" : "", marginTop: '5%' }}>
                     <Link to="/login">Pedro</Link>
                 </div>
             </nav>

@@ -7,13 +7,12 @@ import { CiImageOff } from "react-icons/ci";
 import { BsFillPersonCheckFill, BsFillPersonDashFill, BsPersonBoundingBox } from "react-icons/bs";
 import './style.css';
 import { generoColors } from "../../dados/generoColors.js";
+import { slideObra } from "../../dados/slideObra.js";
 import { Link, useParams } from "react-router-dom";
 import { getObraById } from "../../services/obraService";
 
 function sinopseObraREVISU() {
-
     const { idObra } = useParams();
-
     const [loading, setLoading] = useState(true);
     const [marcado, setMarcado] = useState(true);
 
@@ -26,7 +25,7 @@ function sinopseObraREVISU() {
         atores: []
     });
 
-    const [slidesObra, setSlideObra] = useState([]);
+    const [slidesObra, setSlideObra] = useState(slideObra);
     const [slidesCelebridades, setSlidesCelebridades] = useState([]);
 
     const [indexCarroselObra, setIndexCarroselObra] = useState(0);
@@ -34,7 +33,7 @@ function sinopseObraREVISU() {
 
     // ======================== FETCH ========================
     useEffect(() => {
-        
+
         async function fetchObra() {
             try {
                 setLoading(true);
@@ -50,7 +49,7 @@ function sinopseObraREVISU() {
                 });
 
                 setSlidesCelebridades(dados.atores || []);
-                setSlideObra(dados.obrasRelacionadas || []);
+                // setSlideObra(dados.obrasRelacionadas || []);
             } catch (error) {
                 console.error("Erro ao buscar obra:", error);
             } finally {
@@ -126,7 +125,7 @@ function sinopseObraREVISU() {
                     <div className="sinopse-left">
                         <div className="poster-card"
                             style={{
-                                boxShadow: marcado ? '0px -10px 12px -4px #9A15D8' : '0px -10px 12px -4px #4cd815'
+                                boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8'
                             }}>
                             <img
                                 className="poster-img"
@@ -141,19 +140,19 @@ function sinopseObraREVISU() {
                                 </p>
 
                                 <div className="poster-button">
-                                    {marcado ? (
-                                        <button className="marcar-toggle marcar-btn"
-                                            onClick={() => setMarcado(false)}
-                                            style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}>
-                                            <RiFilmAiLine className="icon" />
-                                            <p style={{ marginLeft: '10px' }}>Marcar</p>
-                                        </button>
-                                    ) : (
+                                    {marcado === true ? (
                                         <button className="marcar-toggle desmarcar-btn"
                                             onClick={() => setMarcado(true)}
                                             style={{ boxShadow: '1px 1px 10px 1px #9A15D8' }}>
                                             <LuScissorsLineDashed className="icon" />
                                             <p style={{ marginLeft: '10px' }}>Desmarcar</p>
+                                        </button>
+                                    ) : (
+                                        <button className="marcar-toggle marcar-btn"
+                                            onClick={() => setMarcado(false)}
+                                            style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}>
+                                            <RiFilmAiLine className="icon" />
+                                            <p style={{ marginLeft: '10px' }}>Marcar</p>
                                         </button>
                                     )}
                                 </div>
@@ -207,7 +206,7 @@ function sinopseObraREVISU() {
                     </div>
 
                     <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-                        <p>Atores e Atrizes do filme em destaque.</p>
+                        <p>Atores e Atrizes da obra em destaque.</p>
                     </div>
 
                     <div className="container-carrousel-celeDesta">
@@ -262,15 +261,16 @@ function sinopseObraREVISU() {
                     </div>
                 </div>
 
+
                 {/* ====== OBRAS RELACIONADAS ====== */}
                 <div className="carrousel-obrasDesta">
                     <div className="titulo">
                         <p style={{ color: '#9A15D8', marginLeft: '10px' }}>OBRAS</p>
-                        <p style={{ marginLeft: '10px' }}>RELACIONADAS:</p>
+                        <p style={{ marginLeft: '10px' }}>EM DESTAQUE</p>
                     </div>
 
                     <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-                        <p>Obras relacionadas ao filme em destaque.</p>
+                        <p>Principais obras de acordo a de destaque.</p>
                     </div>
 
                     <div className="container-carrousel-obrasDesta">
@@ -278,26 +278,53 @@ function sinopseObraREVISU() {
 
                         <div className="slides-row">
                             {getVisibleSlidesObras().map((slide) => (
-                                <div className="card-obra" key={slide._i}>
-                                    <img
-                                        className="slide-imageObras"
-                                        src={`https://image.tmdb.org/t/p/w500/${slide.imagem}`}
-                                        alt={slide.titulo}
-                                    />
+                                <div className="card-obra" key={slide._i} style={{
+                                    boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8',
+                                    border: marcado == true ? '2px solid #4cd815' : '2px solid #9a15d8'
+                                }}>
 
-                                    <p className="title-obra">{slide.titulo}</p>
+                                    <div >
+                                        <img
+                                            className="slide-imageObras"
+                                            src={`https://image.tmdb.org/t/p/w500/${slide.imagem}`}
+                                            alt={slide.titulo}
+                                        />
+                                    </div>
 
-                                    <Link to={`/sinopse-obra/${slide.idObra}`}>
-                                        <button className="icon-btn sinopse-btn">
-                                            <PiFilmReel className='icon' />
-                                            <p style={{ marginLeft: '10px' }}>Sinopse</p>
-                                        </button>
-                                    </Link>
+                                    <div>
+                                        <p className="title-obra">{slide.titulo}</p>
+                                    </div>
 
-                                    <p className="title-obra">
-                                        <FaStar style={{ color: '#d8c415ff' }} />
-                                        {arredondarNota(slide.notaMedia)}
-                                    </p>
+                                    <div>
+                                        <div>
+                                            <button
+                                                className="icon-btn sinopse-btn"
+                                                onClick={() => navigate("/sinopse-obra/" + slide.idObra)}
+                                            >
+                                                <PiFilmReel className="icon" />
+                                                <p style={{ marginLeft: "10px" }}>Sinopse</p>
+                                            </button>
+                                        </div>
+
+                                        <div style={{ display: marcado === true ? 'none' : '' }}>
+                                            <button className="icon-btn marcar-btn" style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}>
+                                                <RiFilmAiLine className='icon' />
+                                                <p style={{ marginLeft: '10px' }}>Marcar</p>
+                                            </button>
+                                        </div>
+
+                                        <div style={{ display: marcado !== true ? 'none' : '' }}>
+                                            <button className="icon-btn desmarcar-btn" style={{ boxShadow: '1px 1px 10px 1px #9A15D8' }}>
+                                                <LuScissorsLineDashed className='icon' />
+                                                <p style={{ marginLeft: '10px' }}>Desmarcar</p>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <p className="title-obra"><FaStar style={{ color: '#d8c415ff' }} /> {arredondarNota(slide.notaMedia)}</p>
+                                    </div>
+
                                 </div>
                             ))}
                         </div>
@@ -306,6 +333,7 @@ function sinopseObraREVISU() {
                     </div>
                 </div>
             </div>
+            <div><h1>-</h1></div>
         </div>
     );
 }
