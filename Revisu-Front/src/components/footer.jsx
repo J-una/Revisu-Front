@@ -10,13 +10,11 @@ export default function Footer({ logado }) {
                 <div className="footer-clapper">
                     <PiFilmSlateBold className="footer-clapper-icon" />
                 </div>
-                <p className="footer-left-text" style={{ marginLeft: '4%' }}>Cinema, séries e reviews em um só lugar.</p>
+                <p className="footer-left-text" style={{ marginLeft: '4%' }}>Cinema, filmes e séries em um só lugar.</p>
             </div>
 
             <nav className="footer-nav">
                 <Link to="/home">Home</Link>
-                <span className="footer-separator">|</span>
-                <Link to="/pesquisar">Pesquisar</Link>
                 <span className="footer-separator">|</span>
                 {logado === true && <Link to="/biblioteca">Biblioteca</Link>}
                 {logado === true && <span className="footer-separator">|</span>}
