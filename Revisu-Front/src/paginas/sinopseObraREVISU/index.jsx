@@ -196,11 +196,20 @@ function sinopseObraREVISU() {
                                         : "0px -10px 12px -4px #9A15D8",
                             }}
                         >
-                            <img
-                                className="poster-img"
-                                src={`https://image.tmdb.org/t/p/w500/${sinopsesObra.imagem}`}
-                                alt={sinopsesObra.titulo}
-                            />
+                            <div>
+                                {sinopsesObra.imagem === "Sem poster" ? (
+                                    <div className="foto-fallback">
+                                        <CiImageOff className="fallback-icon" />
+                                        <p className="fallback-text">Sem foto</p>
+                                    </div>
+                                ) : (
+                                    <img
+                                        className="poster-img"
+                                        src={`https://image.tmdb.org/t/p/w500/${sinopsesObra.imagem}`}
+                                        alt={sinopsesObra.titulo}
+                                    />
+                                )}
+                            </div>
 
                             <div className="poster-info">
                                 <p className="poster-rating">

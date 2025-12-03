@@ -7,6 +7,7 @@ import "../index.css";
 
 export default function Toolbar({ logado }) {
     const navigate = useNavigate();
+    const [usuario, setusuario] = useState("80b519be-acbb-4a11-8af4-12698b00b2ee");
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -153,7 +154,7 @@ export default function Toolbar({ logado }) {
                                     <div className="toolbar-search-group">
                                         <p className="toolbar-search-group-title">Obras</p>
                                         {resultados.obras.map((o) => (
-                                            <div className="toolbar-search-item" key={o.id}>
+                                            <div className="toolbar-search-item" key={o.id} onClick={() => navigate(`/sinopse-obra/${o.id}/${usuario}`)}>
                                                 <div className="toolbar-search-thumb">
                                                     {o.imagem ? (
                                                         <img
@@ -169,6 +170,7 @@ export default function Toolbar({ logado }) {
                                                     <span className="toolbar-search-tag">Obra</span>
                                                 </div>
                                             </div>
+
                                         ))}
                                     </div>
                                 )}
@@ -178,7 +180,7 @@ export default function Toolbar({ logado }) {
                                     <div className="toolbar-search-group">
                                         <p className="toolbar-search-group-title">Atores</p>
                                         {resultados.atores.map((a) => (
-                                            <div className="toolbar-search-item" key={a.id}>
+                                            <div className="toolbar-search-item" key={a.id} onClick={() => navigate(`/detalhe-cele-dire/${a.id}/${usuario}`)}>
                                                 <div className="toolbar-search-thumb">
                                                     {a.imagem ? (
                                                         <img
@@ -203,7 +205,7 @@ export default function Toolbar({ logado }) {
                                     <div className="toolbar-search-group">
                                         <p className="toolbar-search-group-title">Diretores</p>
                                         {resultados.diretores.map((d) => (
-                                            <div className="toolbar-search-item" key={d.id}>
+                                            <div className="toolbar-search-item" key={d.id} onClick={() => navigate(`/detalhe-cele-dire/${d.id}/${usuario}`)}>
                                                 <div className="toolbar-search-thumb">
                                                     {d.imagem ? (
                                                         <img

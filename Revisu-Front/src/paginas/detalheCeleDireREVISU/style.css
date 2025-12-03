@@ -42,10 +42,34 @@
 
 .detalheCeleDire-content .poster-img {
     margin-top: 5%;
-    width: 80%;
+    width: 100%;
     height: 400px;
     object-fit: cover;
     border-radius: 15%;
+}
+
+.detalheCeleDire-content .poster-card .foto-fallback {
+    margin-top: 5%;
+    width: 260px;
+    height: 404.5px;
+    border-radius: 40px;
+    background: #000;
+    border: 2px solid #9A15D8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.detalheCeleDire-content .poster-card .fallback-icon {
+    font-size: 50px;
+    color: white;
+}
+
+.detalheCeleDire-content .poster-card .fallback-text {
+    margin-top: 5px;
+    color: white;
+    font-size: 14px;
 }
 
 .detalheCeleDire-content .poster-gender {
@@ -70,6 +94,12 @@
     border: 1px solid #2d9cdb;
     /* azul */
     color: #2d9cdb;
+}
+
+.detalheCeleDire-content .gender-chip.noinfo {
+    border: 1px solid #808080;
+    /* azul */
+    color: #808080;
 }
 
 .detalheCeleDire-content .gender-chip.female {

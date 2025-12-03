@@ -222,11 +222,20 @@ function DetalheCeleDireREVISU() {
                         <div className="poster-card" style={{
                             boxShadow: marcado ? '0px -10px 12px -4px #9A15D8' : '0px -10px 12px -4px #4cd815'
                         }}>
-                            <img
-                                className="poster-img"
-                                src={`https://image.tmdb.org/t/p/w500/${detalheCeleDire.foto}`}
-                                alt={detalheCeleDire.nome}
-                            />
+                            <div>
+                                {detalheCeleDire.foto ? (
+                                    <img
+                                        className="poster-img"
+                                        src={`https://image.tmdb.org/t/p/w500/${detalheCeleDire.foto}`}
+                                        alt={detalheCeleDire.nome}
+                                    />
+                                ) : (
+                                    <div className="foto-fallback">
+                                        <CiImageOff className="fallback-icon" />
+                                        <p className="fallback-text">Sem foto</p>
+                                    </div>
+                                )}
+                            </div>
 
                             {/* ÍCONE DE GÊNERO */}
                             <div className="poster-gender">
@@ -241,6 +250,13 @@ function DetalheCeleDireREVISU() {
                                     <div className="gender-chip male">
                                         <FaMale className="gender-icon" />
                                         <span>Masculino</span>
+                                    </div>
+                                )}
+
+                                {detalheCeleDire.sexo === "Não informado" && (
+                                    <div className="gender-chip noinfo">
+                                        <FaMale className="gender-icon" />
+                                        <span>Não informado</span>
                                     </div>
                                 )}
                             </div>
@@ -287,14 +303,16 @@ function DetalheCeleDireREVISU() {
                                 <div className="date-item">
                                     <span className="date-label">Nascimento</span>
                                     <span className="date-value">
-                                        {formatarData(detalheCeleDire.dataNascimento)}
+                                        {detalheCeleDire.dataNascimento
+                                            ? formatarData(detalheCeleDire.dataNascimento)
+                                            : "Não informado"}
                                     </span>
                                 </div>
 
                                 <div className="date-item">
                                     <span className="date-label">Falecimento</span>
                                     <span className="date-value">
-                                        {detalheCeleDire.deathday
+                                        {detalheCeleDire.dataMorte
                                             ? formatarData(detalheCeleDire.dataMorte)
                                             : "Não morreu"}
                                     </span>
