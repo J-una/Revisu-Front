@@ -28,7 +28,14 @@ function HomeREVISU() {
 
   const [loading, setLoading] = useState(true);
   const [marcado, setMarcado] = useState(false);
-  const [usuario, setusuario] = useState("80b519be-acbb-4a11-8af4-12698b00b2ee");
+  const [usuario, setUsuario] = useState(() => {
+    const usuarioSession = sessionStorage.getItem("usuario");
+    if (usuarioSession) {
+        const data = JSON.parse(usuarioSession);
+        return data.idUsuario; // pega somente o GUID do usuário
+    }
+    return ""; // valor padrão se não houver ninguém logado
+    });
   const navigate = useNavigate();
 
   function arredondarNota(nota) {

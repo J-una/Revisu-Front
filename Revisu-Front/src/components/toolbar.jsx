@@ -1,13 +1,22 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect,useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaCog, FaUser } from "react-icons/fa";
 import { ImExit } from "react-icons/im";
 import { CiImageOff } from "react-icons/ci";
+import { AuthContext } from "../context/AuthContext";
 import "../index.css";
 
 export default function Toolbar({ logado }) {
+    const { logout } = useContext(AuthContext);
     const navigate = useNavigate();
-    const [usuario, setusuario] = useState("80b519be-acbb-4a11-8af4-12698b00b2ee");
+    const [usuario, setUsuario] = useState(() => {
+    const usuarioSession = sessionStorage.getItem("usuario");
+    if (usuarioSession) {
+        const data = JSON.parse(usuarioSession);
+        return data.idUsuario; // pega somente o GUID do usuário
+    }
+    return ""; // valor padrão se não houver ninguém logado
+    });
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -71,6 +80,20 @@ export default function Toolbar({ logado }) {
         buscarNoBack(termo);
     }
 
+    function handleSelectItem(path) {
+        if (!logado) {
+            navigate("/login");
+            setIsSearchOpen(false);
+            setSearchTerm("");
+            setResultados(null);
+            return;
+        }
+        navigate(path);
+        setIsSearchOpen(false);
+        setSearchTerm("");
+        setResultados(null);
+    }
+
     return (
         <div className="toolbar-wrapper">
 
@@ -101,12 +124,21 @@ export default function Toolbar({ logado }) {
                 </nav>
 
                 <nav className="nav-right">
-                    <button className="icon-btn" onClick={() => navigate("/editar")}>
-                        <FaCog className="icon" />
-                    </button>
-
+                    
                     {logado && (
                         <button className="icon-btn" onClick={() => navigate("/editar")}>
+                            <FaCog className="icon" />
+                        </button>
+                    )}
+
+                    {logado && (
+                        <button
+                            className="icon-btn"
+                            onClick={() => {
+                                logout();        
+                                window.location.href = "/home";; 
+                            }}
+                        >
                             <ImExit className="icon" />
                         </button>
                     )}
@@ -154,7 +186,11 @@ export default function Toolbar({ logado }) {
                                     <div className="toolbar-search-group">
                                         <p className="toolbar-search-group-title">Obras</p>
                                         {resultados.obras.map((o) => (
-                                            <div className="toolbar-search-item" key={o.id} onClick={() => navigate(`/sinopse-obra/${o.id}/${usuario}`)}>
+                                            <div
+                                                className="toolbar-search-item"
+                                                key={o.id}
+                                                onClick={() => handleSelectItem(`/sinopse-obra/${o.id}/${usuario}`)}
+                                            >
                                                 <div className="toolbar-search-thumb">
                                                     {o.imagem ? (
                                                         <img
@@ -180,7 +216,11 @@ export default function Toolbar({ logado }) {
                                     <div className="toolbar-search-group">
                                         <p className="toolbar-search-group-title">Atores</p>
                                         {resultados.atores.map((a) => (
-                                            <div className="toolbar-search-item" key={a.id} onClick={() => navigate(`/detalhe-cele-dire/${a.id}/${usuario}`)}>
+                                            <div
+                                                className="toolbar-search-item"
+                                                key={a.id}
+                                                onClick={() => handleSelectItem(`/detalhe-cele-dire/${a.id}/${usuario}`)}
+                                            >
                                                 <div className="toolbar-search-thumb">
                                                     {a.imagem ? (
                                                         <img
@@ -205,7 +245,11 @@ export default function Toolbar({ logado }) {
                                     <div className="toolbar-search-group">
                                         <p className="toolbar-search-group-title">Diretores</p>
                                         {resultados.diretores.map((d) => (
-                                            <div className="toolbar-search-item" key={d.id} onClick={() => navigate(`/detalhe-cele-dire/${d.id}/${usuario}`)}>
+                                            <div
+                                                className="toolbar-search-item"
+                                                key={d.id}
+                                                onClick={() => handleSelectItem(`/detalhe-cele-dire/${d.id}/${usuario}`)}
+                                            >
                                                 <div className="toolbar-search-thumb">
                                                     {d.imagem ? (
                                                         <img
