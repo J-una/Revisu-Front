@@ -586,3 +586,44 @@
     position: relative;
     overflow: hidden;
 }
+
+/* CARDS ---------------------------------------------------------------------------------------------*/
+.home-loading-overlay {
+    position: absolute;
+    inset: 0;
+    /* top/right/bottom/left: 0 */
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.home-loading-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.home-loading-icon {
+    font-size: 64px;
+    color: #9a15d8;
+    animation: loading-bounce 0.8s infinite alternate;
+}
+
+.home-loading-text {
+    color: #f5f5f5;
+    font-size: 18px;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+@keyframes loading-bounce {
+    from {
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        transform: translateY(-8px) scale(1.05);
+    }
+}

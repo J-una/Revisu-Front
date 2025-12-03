@@ -1,43 +1,84 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaCog, FaUser } from "react-icons/fa";
 import { ImExit } from "react-icons/im";
 import { CiImageOff } from "react-icons/ci";
 import "../index.css";
-import { pesquisar } from "../dados/pesquisar.js";
 
 export default function Toolbar({ logado }) {
     const navigate = useNavigate();
 
-    // seu mock de pesquisa (array com 1 objeto)
-    const [pesquisas] = useState(pesquisar);
-
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [resultados, setResultados] = useState(null);
 
-    const data = pesquisas[0] || { obras: [], atores: [], diretores: [] };
+    const panelRef = useRef(null);
+    const buttonRef = useRef(null);
 
-    const term = searchTerm.trim().toLowerCase();
+    // ► FECHAR AO CLICAR FORA
+    useEffect(() => {
+        function handleClickOutside(e) {
+            if (
+                panelRef.current &&
+                !panelRef.current.contains(e.target) &&
+                buttonRef.current &&
+                !buttonRef.current.contains(e.target)
+            ) {
+                setIsSearchOpen(false);
+            }
+        }
 
-    const obrasFiltradas = term
-        ? data.obras.filter((o) => o.nome.toLowerCase().includes(term))
-        : [];
-    const atoresFiltrados = term
-        ? data.atores.filter((a) => a.nome.toLowerCase().includes(term))
-        : [];
-    const diretoresFiltrados = term
-        ? data.diretores.filter((d) => d.nome.toLowerCase().includes(term))
-        : [];
+        if (isSearchOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
 
-    const temResultados =
-        obrasFiltradas.length || atoresFiltrados.length || diretoresFiltrados.length;
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isSearchOpen]);
+
+    // ► BUSCA NO BACK VIA FETCH
+    async function buscarNoBack(termo) {
+        if (!termo || termo.trim() === "") {
+            setResultados(null);
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `https://localhost:44348/api/Recomendacao/pesquisar?termo=${encodeURIComponent(termo)}`,
+                { method: "GET", headers: { Accept: "*/*" } }
+            );
+
+            if (!response.ok) {
+                console.error("Erro na requisição:", response.status);
+                return;
+            }
+
+            const data = await response.json();
+            setResultados(data);
+        } catch (err) {
+            console.error("Erro ao buscar:", err);
+        }
+    }
+
+    function handleInput(e) {
+        const termo = e.target.value;
+        setSearchTerm(termo);
+        buscarNoBack(termo);
+    }
 
     return (
         <div className="toolbar-wrapper">
+
+            {/* ============================ TOP BAR ============================ */}
             <div className="toolbar">
                 <div className="logo">
                     <img
                         src="src/IMAGES/RevisuLOGOfundoPRETO.png"
+                        alt="Revisu logo"
                         style={{ width: "10%", height: "10%", borderRadius: "8px" }}
                     />
                 </div>
@@ -45,16 +86,16 @@ export default function Toolbar({ logado }) {
                 <nav className="nav-center">
                     <Link className="toolbar-search-trigger" to="/home">Home</Link>
 
-                    <Link
+                    <a
+                        ref={buttonRef}
                         className="toolbar-search-trigger"
                         onClick={() => setIsSearchOpen((prev) => !prev)}
                     >
                         Pesquisar
-                    </Link>
+                    </a>
 
-                    {logado === true && <Link className="toolbar-search-trigger" to="/biblioteca">Biblioteca</Link>}
-                    {logado === true && <Link className="toolbar-search-trigger" to="/para-voce">Para Você</Link>}
-
+                    {logado && <Link className="toolbar-search-trigger" to="/biblioteca">Biblioteca</Link>}
+                    {logado && <Link className="toolbar-search-trigger" to="/para-voce">Para Você</Link>}
                     <Link className="toolbar-search-trigger" to="/sobre-nos">Sobre nós</Link>
                 </nav>
 
@@ -63,132 +104,125 @@ export default function Toolbar({ logado }) {
                         <FaCog className="icon" />
                     </button>
 
-                    <div style={{ display: logado === false ? "none" : "" }}>
+                    {logado && (
                         <button className="icon-btn" onClick={() => navigate("/editar")}>
                             <ImExit className="icon" />
                         </button>
-                    </div>
+                    )}
 
                     <FaUser className="icon" style={{ marginTop: "5%" }} />
 
-                    <div style={{ display: logado === true ? "none" : "", marginTop: "5%" }}>
-                        <Link to="/login">Entrar</Link>
-                    </div>
-                    {/* <div style={{ display: logado === false ? "none" : "", marginTop: "5%" }}>
-                        <Link to="/login">Pedro</Link>
-                    </div> */}
+                    {!logado && (
+                        <div style={{ marginTop: "5%" }}>
+                            <Link to="/login">Entrar</Link>
+                        </div>
+                    )}
                 </nav>
             </div>
 
-            {/* PAINEL DE PESQUISA */}
+            {/* ============================ PAINEL DE PESQUISA ============================ */}
             {isSearchOpen && (
-                <div className="toolbar-search-panel">
+                <div className="toolbar-search-panel" ref={panelRef}>
+                    {/* Input */}
                     <div className="toolbar-search-header">
                         <input
                             type="text"
                             className="toolbar-search-input"
                             placeholder="Pesquisar..."
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onChange={handleInput}
                         />
                     </div>
 
+                    {/* Resultados */}
                     <div className="toolbar-search-results">
-                        {!term && (
+                        {!searchTerm && (
                             <p className="toolbar-search-empty">
                                 Digite algo para pesquisar no catálogo.
                             </p>
                         )}
 
-                        {term && !temResultados && (
-                            <p className="toolbar-search-empty">
-                                Nenhum resultado encontrado para <strong>{searchTerm}</strong>.
-                            </p>
+                        {searchTerm && resultados === null && (
+                            <p className="toolbar-search-empty">Carregando...</p>
                         )}
 
-                        {obrasFiltradas.length > 0 && (
-                            <div className="toolbar-search-group">
-                                <p className="toolbar-search-group-title">Obras</p>
-                                {obrasFiltradas.map((obra) => (
-                                    <div
-                                        key={obra.id}
-                                        className="toolbar-search-item"
-                                    // aqui depois você pode colocar navigate para a página da obra
-                                    // onClick={() => navigate(`/sinopse-obra/${obra.id}`)}
-                                    >
-                                        <div className="toolbar-search-thumb">
-                                            {obra.imagem ? (
-                                                <img
-                                                    src={`https://image.tmdb.org/t/p/w500/${obra.imagem}`}
-                                                    alt={obra.nome}
-                                                />
-                                            ) : (
-                                                <CiImageOff className="toolbar-search-thumb-fallback" />
-                                            )}
-                                        </div>
-                                        <div className="toolbar-search-info">
-                                            <span className="toolbar-search-name">{obra.nome}</span>
-                                            <span className="toolbar-search-tag">Obra</span>
-                                        </div>
+                        {resultados && (
+                            <>
+                                {/* Obras */}
+                                {resultados.obras?.length > 0 && (
+                                    <div className="toolbar-search-group">
+                                        <p className="toolbar-search-group-title">Obras</p>
+                                        {resultados.obras.map((o) => (
+                                            <div className="toolbar-search-item" key={o.id}>
+                                                <div className="toolbar-search-thumb">
+                                                    {o.imagem ? (
+                                                        <img
+                                                            src={`https://image.tmdb.org/t/p/w500/${o.imagem}`}
+                                                            alt={o.nome}
+                                                        />
+                                                    ) : (
+                                                        <CiImageOff className="toolbar-search-thumb-fallback" />
+                                                    )}
+                                                </div>
+                                                <div className="toolbar-search-info">
+                                                    <span className="toolbar-search-name">{o.nome}</span>
+                                                    <span className="toolbar-search-tag">Obra</span>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                        )}
+                                )}
 
-                        {atoresFiltrados.length > 0 && (
-                            <div className="toolbar-search-group">
-                                <p className="toolbar-search-group-title">Atores</p>
-                                {atoresFiltrados.map((ator) => (
-                                    <div
-                                        key={ator.id}
-                                        className="toolbar-search-item"
-                                    // onClick={() => navigate(`/detalhe-ator/${ator.id}`)}
-                                    >
-                                        <div className="toolbar-search-thumb">
-                                            {ator.imagem ? (
-                                                <img
-                                                    src={`https://image.tmdb.org/t/p/w500/${ator.imagem}`}
-                                                    alt={ator.nome}
-                                                />
-                                            ) : (
-                                                <CiImageOff className="toolbar-search-thumb-fallback" />
-                                            )}
-                                        </div>
-                                        <div className="toolbar-search-info">
-                                            <span className="toolbar-search-name">{ator.nome}</span>
-                                            <span className="toolbar-search-tag">Ator / Atriz</span>
-                                        </div>
+                                {/* Atores */}
+                                {resultados.atores?.length > 0 && (
+                                    <div className="toolbar-search-group">
+                                        <p className="toolbar-search-group-title">Atores</p>
+                                        {resultados.atores.map((a) => (
+                                            <div className="toolbar-search-item" key={a.id}>
+                                                <div className="toolbar-search-thumb">
+                                                    {a.imagem ? (
+                                                        <img
+                                                            src={`https://image.tmdb.org/t/p/w500/${a.imagem}`}
+                                                            alt={a.nome}
+                                                        />
+                                                    ) : (
+                                                        <CiImageOff className="toolbar-search-thumb-fallback" />
+                                                    )}
+                                                </div>
+                                                <div className="toolbar-search-info">
+                                                    <span className="toolbar-search-name">{a.nome}</span>
+                                                    <span className="toolbar-search-tag">Ator/Atriz</span>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                        )}
+                                )}
 
-                        {diretoresFiltrados.length > 0 && (
-                            <div className="toolbar-search-group">
-                                <p className="toolbar-search-group-title">Diretores</p>
-                                {diretoresFiltrados.map((dir) => (
-                                    <div
-                                        key={dir.id}
-                                        className="toolbar-search-item"
-                                    // onClick={() => navigate(`/detalhe-diretor/${dir.id}`)}
-                                    >
-                                        <div className="toolbar-search-thumb">
-                                            {dir.imagem ? (
-                                                <img
-                                                    src={`https://image.tmdb.org/t/p/w500/${dir.imagem}`}
-                                                    alt={dir.nome}
-                                                />
-                                            ) : (
-                                                <CiImageOff className="toolbar-search-thumb-fallback" />
-                                            )}
-                                        </div>
-                                        <div className="toolbar-search-info">
-                                            <span className="toolbar-search-name">{dir.nome}</span>
-                                            <span className="toolbar-search-tag">Diretor(a)</span>
-                                        </div>
+                                {/* Diretores */}
+                                {resultados.diretores?.length > 0 && (
+                                    <div className="toolbar-search-group">
+                                        <p className="toolbar-search-group-title">Diretores</p>
+                                        {resultados.diretores.map((d) => (
+                                            <div className="toolbar-search-item" key={d.id}>
+                                                <div className="toolbar-search-thumb">
+                                                    {d.imagem ? (
+                                                        <img
+                                                            src={`https://image.tmdb.org/t/p/w500/${d.imagem}`}
+                                                            alt={d.nome}
+                                                        />
+                                                    ) : (
+                                                        <CiImageOff className="toolbar-search-thumb-fallback" />
+                                                    )}
+                                                </div>
+                                                <div className="toolbar-search-info">
+                                                    <span className="toolbar-search-name">{d.nome}</span>
+                                                    <span className="toolbar-search-tag">Diretor(a)</span>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
+                                )}
+                            </>
                         )}
                     </div>
                 </div>
