@@ -140,6 +140,18 @@
 }
 
 .sinopse-content .star-outline {
+    opacity: 0.2;
+    /* quando nota = 0, ficam apagadonas */
+    font-size: 28px;
+}
+
+.sinopse-content .star-filled {
+    opacity: 1;
+    font-size: 28px;
+    color: #d8c415ff;
+}
+
+.sinopse-content .star-outline {
     color: #9A15D8;
     opacity: .8;
 }
@@ -234,14 +246,14 @@
     font-weight: bold;
 }
 
- /* Modal sucesso/erro*/
+/* Modal sucesso/erro*/
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -260,6 +272,7 @@
 .modal-box.success {
     border-top: 5px solid #4CAF50;
 }
+
 .modal-box.error {
     border-top: 5px solid #e53935;
 }
@@ -275,8 +288,15 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Borda erro input */

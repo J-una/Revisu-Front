@@ -105,6 +105,71 @@ function sinopseObraREVISU() {
 
         fetchSlideObra();
     }, [idObra, idUsuario]);
+    const [idAvaliacao, setIdAvaliacao] = useState("");
+    const [comentarioUsuarioPuxou, setComentariousuarioPuxou] = useState("");
+    const [comentarioUsuarioInseriu, setComentariousuarioInseriu] = useState("");
+    const [notaEstrelaPuxou, setNotaEstrelaPuxou] = useState(0);
+    const [notaEstrelaInseriu, setNotaEstrelaInseriu] = useState(null);
+    const notaValida = Number.isInteger(notaEstrelaInseriu) && notaEstrelaInseriu >= 1 && notaEstrelaInseriu <= 5;
+    useEffect(() => {
+        async function pegaAvaliacao() {
+            try {
+                const resp = await fetch(
+                    `https://localhost:44348/api/AvaliacaoUsuario/listar-avaliacao-obra?idUsuario=${idUsuario}&idObra=${idObra}`,
+                    {
+                        headers: {
+                            accept: "application/json",
+                        },
+                    }
+                );
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao buscar avaliação da obra");
+                }
+
+                const dados = await resp.json();
+
+                setIdAvaliacao(dados.idAvaliacaoUsuario);
+                setNotaEstrelaPuxou(dados.nota);
+                setComentariousuarioPuxou(dados.comentario);
+
+            } catch (error) {
+                console.error("Erro ao buscar avaliação da obra:", error);
+                setIdAvaliacao("");
+                setNotaEstrelaPuxou(0);
+                setComentariousuarioPuxou("");
+            }
+        }
+
+        pegaAvaliacao();
+    }, [idObra, idUsuario]);
+    async function EnviarAvaliacao() {
+        try {
+            const response = await fetch(
+                `https://localhost:44348/api/AvaliacaoUsuario/salvar-avaliacao-obra?idUsuario=${idUsuario}&idObra=${idObra}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        comentario: comentarioUsuarioInseriu,
+                        nota: notaEstrelaInseriu,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao enviar comentário");
+            }
+
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        } finally {
+            pegaAvaliacao();
+        }
+    }
 
     function arredondarNota(nota) {
         if (!nota) return "0.0";
@@ -392,9 +457,16 @@ function sinopseObraREVISU() {
 
                         {/* stars visual */}
                         <div className="stars-row">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                                <FaStar key={i} className="star-outline" />
-                            ))}
+                            {Array.from({ length: 5 }).map((_, i) => {
+                                const isFilled = i < notaEstrelaPuxou; // 1 a 5
+
+                                return (
+                                    <FaStar
+                                        key={i}
+                                        className={isFilled ? "star-filled" : "star-outline"}
+                                    />
+                                );
+                            })}
                         </div>
                     </div>
 
@@ -427,9 +499,52 @@ function sinopseObraREVISU() {
                     style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
                 >
                     <div className="comentario-box">
-                        <label>Comentário:</label>
-                        <textarea placeholder="comente o que achou da obra"></textarea>
-                        <button className="comentario-btn">Enviar</button>
+                        {idAvaliacao ? (
+                            // JÁ EXISTE AVALIAÇÃO -> só mostra
+                            <>
+                                <h3>Sua avaliação</h3>
+                                <p style={{ marginTop: "10px", whiteSpace: "pre-wrap" }}>
+                                    {comentarioUsuarioPuxou || "Você não deixou comentário."}
+                                </p>
+                            </>
+                        ) : (
+                            // AINDA NÃO TEM AVALIAÇÃO -> mostra inputs
+                            <>
+                                <label>Nota (1 a 5):</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="5"
+                                    value={notaEstrelaInseriu ?? ""}
+                                    onChange={(e) => {
+                                        const valor = e.target.value;
+                                        setNotaEstrelaInseriu(
+                                            valor === "" ? null : e.target.valueAsNumber // garante número
+                                        );
+                                    }}
+                                    className="comentario-input-nota"
+                                    style={{ width: "2%", height: "3%" }}
+                                />
+
+                                <label style={{ marginTop: "10px" }}>Comentário:</label>
+                                <textarea
+                                    placeholder="Comente o que achou da obra"
+                                    value={comentarioUsuarioInseriu}
+                                    onChange={(e) =>
+                                        setComentariousuarioInseriu(e.target.value)
+                                    }
+                                />
+
+                                <button
+                                    className="comentario-btn"
+                                    type="button"
+                                    onClick={EnviarAvaliacao}
+                                    disabled={!notaValida}
+                                >
+                                    Enviar
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
 

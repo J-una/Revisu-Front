@@ -7,12 +7,13 @@ import { BsFillPersonCheckFill, BsFillPersonDashFill, BsPersonBoundingBox } from
 import { CiImageOff } from "react-icons/ci";
 import './style.css'
 import { generoColors } from "../../dados/generoColors.js";
+import { useNavigate } from "react-router-dom";
 
 function bibliotecaREVISU() {
     const [indexCarroselObra, setIndexCarroselObra] = useState(0);
     const [indexCarroselCele, setIndexCarroselCele] = useState(0);
     const [indexCarroselDire, setIndexCarroselDire] = useState(0);
-
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [usuario, setUsuario] = useState(() => {
         const usuarioSession = sessionStorage.getItem("usuario");
@@ -151,6 +152,8 @@ function bibliotecaREVISU() {
         });
     }
 
+    const obraVisiveis = getVisibleSlidesObras();
+
     // ====== CARROSSEL CELEBRIDADES (atores) ==========
     function nextSlideCele() {
         const total = atores.length;
@@ -173,6 +176,8 @@ function bibliotecaREVISU() {
         });
     }
 
+    const celeVisiveis = getVisibleSlidesCelebridades();
+
     // ====== CARROSSEL DIRETORES ==========
     function nextSlideDire() {
         const total = diretores.length;
@@ -194,6 +199,8 @@ function bibliotecaREVISU() {
             return { ...diretores[slideIndex], _i: slideIndex };
         });
     }
+
+    const direVisiveis = getVisibleSlidesDiretores();
 
     async function salvarNaBibliotecaObra(idObra) {
         try {
@@ -461,306 +468,327 @@ function bibliotecaREVISU() {
                 <div className="carrousel-obrasDesta">
                     <div className="titulo">
                         <p style={{ color: "#9A15D8", marginLeft: "10px" }}>OBRAS</p>
-                        <p style={{ marginLeft: "10px" }}>EM DESTAQUE</p>
+                        <p style={{ marginLeft: "10px" }}>SELECIONADAS</p>
                     </div>
 
                     <div style={{ marginTop: "10px", marginLeft: "5%" }}>
-                        <p>Principais obras de acordo com telespectadores.</p>
+                        <p>Principais obras que você selecionou.</p>
                     </div>
 
                     <div className="container-carrousel-obrasDesta">
-                        <button className="arrow left" onClick={prevSlideObra}>
-                            ❮
-                        </button>
+                        {obraVisiveis.length === 0 ? (
+                            <p className="sem-elenco">
+                                Nenhuma celebridade selecionada...
+                            </p>
+                        ) : (
+                            <div>
+                                <button className="arrow left" onClick={prevSlideObra}>
+                                    ❮
+                                </button>
 
-                        <div className="slides-row">
-                            {getVisibleSlidesObras().map((slide) => (
-                                <div
-                                    className="card-obra"
-                                    key={slide._i}
-                                    style={{
-                                        boxShadow:
-                                            slide.marcado === true
-                                                ? "0px -10px 12px -4px #4cd815"
-                                                : "0px -10px 12px -4px #9A15D8",
-                                        border:
-                                            slide.marcado === true
-                                                ? "2px solid #4cd815"
-                                                : "2px solid #9a15d8",
-                                    }}
-                                >
-                                    <div>
-                                        <img
-                                            className="slide-imageObras"
-                                            src={`https://image.tmdb.org/t/p/w500/${slide.imagem}`}
-                                            alt={slide.nome || slide.titulo}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <p className="title-obra">{slide.nome || slide.titulo}</p>
-                                    </div>
-
-                                    <div>
-                                        <div>
-                                            <p>{slide.tipo === "Filme" ? "Filme" : "Série"}</p>
-                                        </div>
-                                        <button
-                                            className="icon-btn sinopse-btn"
-                                            onClick={() =>
-                                                navigate(
-                                                    `/sinopse-obra/${slide.idObra || slide.id}/${usuario}`
-                                                )
-                                            }
+                                <div className="slides-row">
+                                    {obraVisiveis.map((slide) => (
+                                        <div
+                                            className="card-obra"
+                                            key={slide._i}
+                                            style={{
+                                                boxShadow:
+                                                    slide.marcado === true
+                                                        ? "0px -10px 12px -4px #4cd815"
+                                                        : "0px -10px 12px -4px #9A15D8",
+                                                border:
+                                                    slide.marcado === true
+                                                        ? "2px solid #4cd815"
+                                                        : "2px solid #9a15d8",
+                                            }}
                                         >
-                                            <PiFilmReel className="icon" />
-                                            <p style={{ marginLeft: "10px" }}>Sinopse</p>
-                                        </button>
+                                            <div>
+                                                <img
+                                                    className="slide-imageObras"
+                                                    src={`https://image.tmdb.org/t/p/w500/${slide.imagem}`}
+                                                    alt={slide.nome || slide.titulo}
+                                                />
+                                            </div>
 
-                                        <div style={{ display: slide.marcado === true ? "none" : "" }}>
-                                            <button
-                                                className="icon-btn marcar-btn"
-                                                style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
-                                                onClick={() => salvarNaBibliotecaObra(slide.idObra || slide.id)}
-                                            >
-                                                <RiFilmAiLine className="icon" />
-                                                <p style={{ marginLeft: "10px" }}>Marcar</p>
-                                            </button>
+                                            <div>
+                                                <p className="title-obra">{slide.nome || slide.titulo}</p>
+                                            </div>
+
+                                            <div>
+                                                <div>
+                                                    <p>{slide.tipo === "Filme" ? "Filme" : "Série"}</p>
+                                                </div>
+                                                <button
+                                                    className="icon-btn sinopse-btn"
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/sinopse-obra/${slide.idObra || slide.id}/${usuario}`
+                                                        )
+                                                    }
+                                                >
+                                                    <PiFilmReel className="icon" />
+                                                    <p style={{ marginLeft: "10px" }}>Sinopse</p>
+                                                </button>
+
+                                                <div style={{ display: slide.marcado === true ? "none" : "" }}>
+                                                    <button
+                                                        className="icon-btn marcar-btn"
+                                                        style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
+                                                        onClick={() => salvarNaBibliotecaObra(slide.idObra || slide.id)}
+                                                    >
+                                                        <RiFilmAiLine className="icon" />
+                                                        <p style={{ marginLeft: "10px" }}>Marcar</p>
+                                                    </button>
+                                                </div>
+
+                                                <div style={{ display: slide.marcado === false ? "none" : "" }}>
+                                                    <button
+                                                        className="icon-btn desmarcar-btn"
+                                                        style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}
+                                                        onClick={() => removerNaBibliotecaObra(slide.idObra || slide.id)}
+                                                    >
+                                                        <LuScissorsLineDashed className="icon" />
+                                                        <p style={{ marginLeft: "10px" }}>Desmarcar</p>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <p className="title-obra">
+                                                    <FaStar style={{ color: "#d8c415ff" }} />{" "}
+                                                    {arredondarNota(slide.notaMedia)}
+                                                </p>
+                                            </div>
                                         </div>
-
-                                        <div style={{ display: slide.marcado === false ? "none" : "" }}>
-                                            <button
-                                                className="icon-btn desmarcar-btn"
-                                                style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}
-                                                onClick={() => removerNaBibliotecaObra(slide.idObra || slide.id)}
-                                            >
-                                                <LuScissorsLineDashed className="icon" />
-                                                <p style={{ marginLeft: "10px" }}>Desmarcar</p>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <p className="title-obra">
-                                            <FaStar style={{ color: "#d8c415ff" }} />{" "}
-                                            {arredondarNota(slide.notaMedia)}
-                                        </p>
-                                    </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
 
-                        <button className="arrow right" onClick={nextSlideObra}>
-                            ❯
-                        </button>
+                                <button className="arrow right" onClick={nextSlideObra}>
+                                    ❯
+                                </button>
+                            </div>)}
                     </div>
                 </div>
 
                 <div className="carrousel-celeDesta">
                     <div className="titulo">
                         <p style={{ color: "#9A15D8", marginLeft: "10px" }}>CELEBRIDADES</p>
-                        <p style={{ marginLeft: "10px" }}>EM DESTAQUE</p>
+                        <p style={{ marginLeft: "10px" }}>SELECIONADAS</p>
                     </div>
 
                     <div style={{ marginTop: "10px", marginLeft: "5%" }}>
-                        <p>Principais Atores e Atrizes de acordo com telespectadores.</p>
+                        <p>Principais celebridades que você selecionou.</p>
                     </div>
 
                     <div className="container-carrousel-celeDesta">
-                        <button className="arrow left" onClick={prevSlideCele}>
-                            ❮
-                        </button>
+                        {celeVisiveis.length === 0 ? (
+                            <p className="sem-elenco">
+                                Nenhuma celebridade selecionada...
+                            </p>
+                        ) : (
+                            <div>
+                                <button className="arrow left" onClick={prevSlideCele}>
+                                    ❮
+                                </button>
 
-                        <div className="slides-grid-celeDesta">
-                            {getVisibleSlidesCelebridades().map((cele) => (
-                                <div
-                                    className="card-celeDesta"
-                                    key={cele._i}
-                                    style={{
-                                        boxShadow:
-                                            cele.marcado === true
-                                                ? "0px -10px 12px -4px #4cd815"
-                                                : "0px -10px 12px -4px #9A15D8",
-                                        border:
-                                            cele.marcado === true
-                                                ? "2px solid #4cd815"
-                                                : "2px solid #9a15d8",
-                                    }}
-                                >
-                                    <div className="foto-wrapper">
-                                        {cele.imagem || cele.foto ? (
-                                            <img
-                                                className="slide-imageceleDesta"
-                                                src={`https://image.tmdb.org/t/p/w500/${cele.imagem || cele.foto
-                                                    }`}
-                                                alt={cele.nome}
-                                            />
-                                        ) : (
-                                            <div className="foto-fallback">
-                                                <CiImageOff className="fallback-icon" />
-                                                <p className="fallback-text">Sem foto</p>
+                                <div className="slides-grid-celeDesta">
+                                    {celeVisiveis.map((cele) => (
+                                        <div
+                                            className="card-celeDesta"
+                                            key={cele._i}
+                                            style={{
+                                                boxShadow:
+                                                    cele.marcado === true
+                                                        ? "0px -10px 12px -4px #4cd815"
+                                                        : "0px -10px 12px -4px #9A15D8",
+                                                border:
+                                                    cele.marcado === true
+                                                        ? "2px solid #4cd815"
+                                                        : "2px solid #9a15d8",
+                                            }}
+                                        >
+                                            <div className="foto-wrapper">
+                                                {cele.imagem || cele.foto ? (
+                                                    <img
+                                                        className="slide-imageceleDesta"
+                                                        src={`https://image.tmdb.org/t/p/w500/${cele.imagem || cele.foto
+                                                            }`}
+                                                        alt={cele.nome}
+                                                    />
+                                                ) : (
+                                                    <div className="foto-fallback">
+                                                        <CiImageOff className="fallback-icon" />
+                                                        <p className="fallback-text">Sem foto</p>
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
-                                    </div>
 
-                                    <div className="info-celeDesta" style={{ width: "77%" }}>
-                                        <p className="title-celeDesta">{cele.nome}</p>
+                                            <div className="info-celeDesta" style={{ width: "77%" }}>
+                                                <p className="title-celeDesta">{cele.nome}</p>
 
-                                        <div className="generos-celeDesta">
-                                            {(cele.generos || []).map((g, idx) => (
-                                                <span
-                                                    className="genero-chip"
-                                                    key={idx}
-                                                    style={{
-                                                        borderColor: generoColors[g] || "#9A15D8",
-                                                    }}
-                                                >
-                                                    {g}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
+                                                <div className="generos-celeDesta">
+                                                    {(cele.generos || []).map((g, idx) => (
+                                                        <span
+                                                            className="genero-chip"
+                                                            key={idx}
+                                                            style={{
+                                                                borderColor: generoColors[g] || "#9A15D8",
+                                                            }}
+                                                        >
+                                                            {g}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
 
-                                    <div style={{ width: "8%" }}>
-                                        <button className="icon-btn" onClick={() => navigate(`/detalhe-cele-dire/${cele.idElenco}/${usuario}`)}>
-                                            <BsPersonBoundingBox
-                                                className="icon"
-                                                style={{ color: "#d8c415ff" }}
-                                            />
-                                        </button>
-
-                                        <div style={{ marginTop: "10%" }}>
-                                            <div style={{ display: cele.marcado === true ? "none" : "" }}>
-                                                <button className="icon-btn"
-                                                    onClick={() => salvarNaBibliotecaCele(cele.idElenco)}>
-                                                    <BsFillPersonCheckFill
+                                            <div style={{ width: "8%" }}>
+                                                <button className="icon-btn" onClick={() => navigate(`/detalhe-cele-dire/${cele.idElenco}/${usuario}`)}>
+                                                    <BsPersonBoundingBox
                                                         className="icon"
-                                                        style={{ color: "#4cd815" }}
+                                                        style={{ color: "#d8c415ff" }}
                                                     />
                                                 </button>
-                                            </div>
-                                            <div style={{ display: cele.marcado === false ? "none" : "" }}>
-                                                <button className="icon-btn"
-                                                    onClick={() => removerNaBibliotecaCele(cele.idElenco)}>
-                                                    <BsFillPersonDashFill
-                                                        className="icon"
-                                                        style={{ color: "#9A15D8" }}
-                                                    />
-                                                </button>
+
+                                                <div style={{ marginTop: "10%" }}>
+                                                    <div style={{ display: cele.marcado === true ? "none" : "" }}>
+                                                        <button className="icon-btn"
+                                                            onClick={() => salvarNaBibliotecaCele(cele.idElenco)}>
+                                                            <BsFillPersonCheckFill
+                                                                className="icon"
+                                                                style={{ color: "#4cd815" }}
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                    <div style={{ display: cele.marcado === false ? "none" : "" }}>
+                                                        <button className="icon-btn"
+                                                            onClick={() => removerNaBibliotecaCele(cele.idElenco)}>
+                                                            <BsFillPersonDashFill
+                                                                className="icon"
+                                                                style={{ color: "#9A15D8" }}
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
 
-                        <button className="arrow right" onClick={nextSlideCele}>
-                            ❯
-                        </button>
+                                <button className="arrow right" onClick={nextSlideCele}>
+                                    ❯
+                                </button>
+                            </div>)}
                     </div>
                 </div>
 
                 <div className="carrousel-diretDesta">
                     <div className="titulo">
                         <p style={{ color: "#9A15D8", marginLeft: "10px" }}>DIRETORES</p>
-                        <p style={{ marginLeft: "10px" }}>EM DESTAQUE</p>
+                        <p style={{ marginLeft: "10px" }}>SELECIONADAS</p>
                     </div>
 
                     <div style={{ marginTop: "10px", marginLeft: "5%" }}>
-                        <p>Principais Diretores de acordo com telespectadores.</p>
+                        <p>Principais diretores que você selecionou.</p>
                     </div>
 
                     <div className="container-carrousel-diretDesta">
-                        <button className="arrow left" onClick={prevSlideDire}>
-                            ❮
-                        </button>
+                        {direVisiveis.length === 0 ? (
+                            <p className="sem-elenco">
+                                Nenhum diretor selecionado...
+                            </p>
+                        ) : (
+                            <div>
+                                <button className="arrow left" onClick={prevSlideDire}>
+                                    ❮
+                                </button>
 
-                        <div className="slides-grid-diretDesta">
-                            {getVisibleSlidesDiretores().map((dire) => (
-                                <div
-                                    className="card-diretDesta"
-                                    key={dire._i}
-                                    style={{
-                                        boxShadow:
-                                            dire.marcado === true
-                                                ? "0px -10px 12px -4px #4cd815"
-                                                : "0px -10px 12px -4px #9A15D8",
-                                        border:
-                                            dire.marcado === true
-                                                ? "2px solid #4cd815"
-                                                : "2px solid #9a15d8",
-                                    }}
-                                >
-                                    <div className="foto-wrapper" style={{ width: "15%" }}>
-                                        {dire.imagem || dire.foto ? (
-                                            <img
-                                                className="slide-imageceleDesta"
-                                                src={`https://image.tmdb.org/t/p/w500/${dire.imagem || dire.foto
-                                                    }`}
-                                                alt={dire.nome}
-                                            />
-                                        ) : (
-                                            <div className="foto-fallback">
-                                                <CiImageOff className="fallback-icon" />
-                                                <p className="fallback-text">Sem foto</p>
+                                <div className="slides-grid-diretDesta">
+                                    {direVisiveis.map((dire) => (
+                                        <div
+                                            className="card-diretDesta"
+                                            key={dire._i}
+                                            style={{
+                                                boxShadow:
+                                                    dire.marcado === true
+                                                        ? "0px -10px 12px -4px #4cd815"
+                                                        : "0px -10px 12px -4px #9A15D8",
+                                                border:
+                                                    dire.marcado === true
+                                                        ? "2px solid #4cd815"
+                                                        : "2px solid #9a15d8",
+                                            }}
+                                        >
+                                            <div className="foto-wrapper" style={{ width: "15%" }}>
+                                                {dire.imagem || dire.foto ? (
+                                                    <img
+                                                        className="slide-imageceleDesta"
+                                                        src={`https://image.tmdb.org/t/p/w500/${dire.imagem || dire.foto
+                                                            }`}
+                                                        alt={dire.nome}
+                                                    />
+                                                ) : (
+                                                    <div className="foto-fallback">
+                                                        <CiImageOff className="fallback-icon" />
+                                                        <p className="fallback-text">Sem foto</p>
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
-                                    </div>
 
-                                    <div className="info-diretDesta" style={{ width: "77%" }}>
-                                        <p className="title-diretDesta">{dire.nome}</p>
+                                            <div className="info-diretDesta" style={{ width: "77%" }}>
+                                                <p className="title-diretDesta">{dire.nome}</p>
 
-                                        <div className="generos-celeDesta">
-                                            {(dire.obras || []).map((g, idx) => (
-                                                <span
-                                                    className="genero-chip"
-                                                    key={idx}
-                                                    style={{
-                                                        borderColor: "#9A15D8",
-                                                    }}
-                                                >
-                                                    {g}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
+                                                <div className="generos-celeDesta">
+                                                    {(dire.obras || []).map((g, idx) => (
+                                                        <span
+                                                            className="genero-chip"
+                                                            key={idx}
+                                                            style={{
+                                                                borderColor: "#9A15D8",
+                                                            }}
+                                                        >
+                                                            {g}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
 
-                                    <div style={{ width: "8%" }}>
-                                        <button className="icon-btn" onClick={() => navigate(`/detalhe-cele-dire/${dire.idElenco}/${usuario}`)}>
-                                            <BsPersonBoundingBox
-                                                className="icon"
-                                                style={{ color: "#d8c415ff" }}
-                                            />
-                                        </button>
-
-                                        <div style={{ marginTop: "10%" }}>
-                                            <div style={{ display: dire.marcado === true ? "none" : "" }}>
-                                                <button className="icon-btn"
-                                                    onClick={() => salvarNaBibliotecaDire(dire.idElenco)}>
-                                                    <BsFillPersonCheckFill
+                                            <div style={{ width: "8%" }}>
+                                                <button className="icon-btn" onClick={() => navigate(`/detalhe-cele-dire/${dire.idElenco}/${usuario}`)}>
+                                                    <BsPersonBoundingBox
                                                         className="icon"
-                                                        style={{ color: "#4cd815" }}
+                                                        style={{ color: "#d8c415ff" }}
                                                     />
                                                 </button>
-                                            </div>
-                                            <div style={{ display: dire.marcado === false ? "none" : "" }}>
-                                                <button className="icon-btn"
-                                                    onClick={() => removerNaBibliotecaDire(dire.idElenco)}>
-                                                    <BsFillPersonDashFill
-                                                        className="icon"
-                                                        style={{ color: "#9A15D8" }}
-                                                    />
-                                                </button>
+
+                                                <div style={{ marginTop: "10%" }}>
+                                                    <div style={{ display: dire.marcado === true ? "none" : "" }}>
+                                                        <button className="icon-btn"
+                                                            onClick={() => salvarNaBibliotecaDire(dire.idElenco)}>
+                                                            <BsFillPersonCheckFill
+                                                                className="icon"
+                                                                style={{ color: "#4cd815" }}
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                    <div style={{ display: dire.marcado === false ? "none" : "" }}>
+                                                        <button className="icon-btn"
+                                                            onClick={() => removerNaBibliotecaDire(dire.idElenco)}>
+                                                            <BsFillPersonDashFill
+                                                                className="icon"
+                                                                style={{ color: "#9A15D8" }}
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
 
-                        <button className="arrow right" onClick={nextSlideDire}>
-                            ❯
-                        </button>
+                                <button className="arrow right" onClick={nextSlideDire}>
+                                    ❯
+                                </button>
+                            </div>)}
                     </div>
                 </div>
             </div>

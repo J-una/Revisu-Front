@@ -20,7 +20,7 @@ function EditarREVISU() {
 
     // MODAIS (mesma estrutura do cadastro)
     const [modalMessage, setModalMessage] = useState("");
-    const [modalType, setModalType] = useState(""); 
+    const [modalType, setModalType] = useState("");
     const [showModal, setShowModal] = useState(false);
 
     function openModal(msg, type) {
@@ -68,7 +68,7 @@ function EditarREVISU() {
         }
 
         try {
-            const resp = await api.get("https://localhost:7290/api/usuarios/verificar-email", {
+            const resp = await api.get("https://localhost:44348/api/usuarios/verificar-email", {
                 params: { email: email, ignoreId: user.idUsuario }
             });
 
@@ -95,7 +95,7 @@ function EditarREVISU() {
 
         try {
             const resposta = await api.put(
-                `https://localhost:7290/api/usuarios/editar-usuario/${user.idUsuario}`,
+                `https://localhost:44348/api/usuarios/editar-usuario/${user.idUsuario}`,
                 {
                     nome: form.nome,
                     email: form.email,
@@ -167,7 +167,7 @@ function EditarREVISU() {
                             />
                         </div>
 
-                       
+
 
                         <label className="editar-label">Nova Senha</label>
                         <div className="input-wrapper">

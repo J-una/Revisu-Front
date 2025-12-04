@@ -1,12 +1,12 @@
 // src/quizREVISU/index.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { RiFilmAiLine } from "react-icons/ri";
 import { PiFilmSlateBold } from "react-icons/pi";
 import { FaStar } from "react-icons/fa";
 import { LuRefreshCcw } from "react-icons/lu";
 import "./style.css";
-import { slideObra } from "../../dados/slideObra.js";
 import { generoColors } from "../../dados/generoColors.js";
+import { useNavigate } from "react-router-dom";
 
 function arredondarNota(nota) {
     const primeiraCasa = Math.floor(nota * 10) / 10;
@@ -21,17 +21,86 @@ function arredondarNota(nota) {
 
 // pega N obras aleatórias, ignorando as que já foram selecionadas
 function getRandomObras(all, count, excludeIds = []) {
+    if (!all || all.length === 0) return [];
     const disponiveis = all.filter((o) => !excludeIds.includes(o.idObra));
     const embaralhado = [...disponiveis].sort(() => Math.random() - 0.5);
     return embaralhado.slice(0, Math.min(count, embaralhado.length));
 }
 
 function QuizREVISU() {
-    const [selecionadas, setSelecionadas] = useState([]); // ids
-    const [obrasVisiveis, setObrasVisiveis] = useState(() =>
-        getRandomObras(slideObra, 4)
-    );
-    const generosColors = generoColors;
+    const navigate = useNavigate();
+    const [slideObra, setSlideObra] = useState([]);
+    const [selecionadas, setSelecionadas] = useState([]);
+    const [obrasVisiveis, setObrasVisiveis] = useState([]);
+
+    const [usuario, setUsuario] = useState(() => {
+        const usuarioSession = sessionStorage.getItem("usuario");
+        if (usuarioSession) {
+            const data = JSON.parse(usuarioSession);
+            return data.idUsuario;
+        }
+        return "";
+    });
+
+    useEffect(() => {
+        async function SlideObraQuiz() {
+            try {
+                const resp = await fetch(
+                    `https://localhost:44348/api/Recomendacao/obras-quiz`,
+                    {
+                        headers: {
+                            accept: "application/json",
+                        },
+                    }
+                );
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao buscar detalhes da obra");
+                }
+
+                const dados = await resp.json();
+
+                setSlideObra(dados || []);
+                // já define as 4 primeiras aleatórias aqui
+                setObrasVisiveis(getRandomObras(dados, 4));
+
+            } catch (error) {
+                console.error("Erro ao buscar obras similares:", error);
+            }
+        }
+
+        SlideObraQuiz();
+    }, []);
+
+    async function salvarNaBibliotecaObraQuiz(idsObras) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/quiz/salvar",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObras: idsObras, // array de GUIDs
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            navigate("/home", { replace: true });
+            window.scrollTo(0, 0);
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+
     const maxSelecoes = 10;
 
     function handleRefresh() {
@@ -39,7 +108,7 @@ function QuizREVISU() {
     }
 
     function handleSelecionar(idObra) {
-        // já chegou no limite ou já selecionou essa obra
+        // se já atingiu o máximo ou já selecionou essa, não faz nada
         if (selecionadas.length >= maxSelecoes || selecionadas.includes(idObra)) {
             return;
         }
@@ -47,7 +116,15 @@ function QuizREVISU() {
         const novasSelecionadas = [...selecionadas, idObra];
         setSelecionadas(novasSelecionadas);
 
-        // troca o “conjunto” por outras 4
+        // acabou de bater 10
+        if (novasSelecionadas.length === maxSelecoes) {
+            salvarNaBibliotecaObraQuiz(novasSelecionadas);
+            // se você quiser, pode também travar o refresh ou limpar as obrasVisiveis aqui:
+            // setObrasVisiveis([]);
+            return;
+        }
+
+        // se ainda não chegou em 10, gera mais 4 obras aleatórias
         const novasObras = getRandomObras(slideObra, 4, novasSelecionadas);
         setObrasVisiveis(novasObras);
     }
@@ -115,11 +192,14 @@ function QuizREVISU() {
                                 </div>
 
                                 <div className="quiz-card-info">
-                                    <p className="quiz-card-title">{obra.titulo}</p>
+                                    <p className="quiz-card-title">{obra.nome}</p>
 
+                                    <div>
+                                        <a>{obra.tipo}</a>
+                                    </div>
                                     <div className="quiz-card-rating">
                                         <FaStar className="quiz-star-icon" />
-                                        <span>{arredondarNota(obra.notaMedia)}</span>
+                                        <span>{arredondarNota(obra.nota)}</span>
                                     </div>
 
 
@@ -129,7 +209,7 @@ function QuizREVISU() {
                                                 className="genero-chip"
                                                 key={idx}
                                                 style={{
-                                                    borderColor: generosColors[g] || "#9A15D8",
+                                                    borderColor: generoColors[g] || "#9A15D8",
                                                 }}
                                             >
                                                 {g}

@@ -26,138 +26,138 @@ function cadastroREVISU() {
 
     async function cadastrarUsuario() {
 
-            let camposInvalidos = {
-                nome: !nome.trim(),
-                email: !email.trim(),
-                senha: !senha.trim(),
-                nascimento: !nascimento.trim()
-            };
+        let camposInvalidos = {
+            nome: !nome.trim(),
+            email: !email.trim(),
+            senha: !senha.trim(),
+            nascimento: !nascimento.trim()
+        };
 
-            // Atualiza visuais
-            setErros(camposInvalidos);
+        // Atualiza visuais
+        setErros(camposInvalidos);
 
-            // Se qualquer campo estiver vazio → erro
-            if (Object.values(camposInvalidos).some(v => v)) {
-                setModalMessage("Por favor, preencha todos os campos.");
+        // Se qualquer campo estiver vazio → erro
+        if (Object.values(camposInvalidos).some(v => v)) {
+            setModalMessage("Por favor, preencha todos os campos.");
+            setModalType("error");
+            setShowModal(true);
+            return;
+        }
+
+        // Validação de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setErros(prev => ({ ...prev, email: true }));
+            setModalMessage("Digite um e-mail válido.");
+            setModalType("error");
+            setShowModal(true);
+            return;
+        }
+
+        // Validação de senha
+        if (senha.length < 6) {
+            setErros(prev => ({ ...prev, senha: true }));
+            setModalMessage("A senha deve conter pelo menos 6 caracteres.");
+            setModalType("error");
+            setShowModal(true);
+            return;
+        }
+
+        // Validação de data
+        const data = new Date(nascimento);
+        if (isNaN(data.getTime())) {
+            setErros(prev => ({ ...prev, nascimento: true }));
+            setModalMessage("Digite uma data de nascimento válida.");
+            setModalType("error");
+            setShowModal(true);
+            return;
+        }
+
+        // Se tudo ok → API
+        try {
+            setLoading(true);
+
+            const response = await fetch("https://localhost:44348/api/usuarios/cadastrar-usuario", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    nome,
+                    email,
+                    senha,
+                    dataNascimento: nascimento
+                })
+            });
+
+            if (!response.ok) {
+                setModalMessage("Erro ao cadastrar usuário.");
                 setModalType("error");
                 setShowModal(true);
                 return;
             }
 
-            // Validação de email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
+            const data = await response.json();
+            console.log("Usuário cadastrado:", data);
+
+            setModalMessage("Conta criada com sucesso!");
+            setModalType("success");
+            setShowModal(true);
+        }
+        catch (err) {
+            console.error(err);
+            setModalMessage("Erro inesperado ao cadastrar.");
+            setModalType("error");
+            setShowModal(true);
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+
+    async function verificarEmail(emailDigitado) {
+        if (!emailDigitado || emailDigitado.trim() === "") return;
+
+        try {
+            const response = await fetch(`https://localhost:44348/api/usuarios/verificar-email?email=${emailDigitado}`);
+
+            const data = await response.json();
+
+            if (data.emailExiste) {
                 setErros(prev => ({ ...prev, email: true }));
-                setModalMessage("Digite um e-mail válido.");
+                setModalMessage("Este e-mail já está cadastrado.");
                 setModalType("error");
                 setShowModal(true);
-                return;
-            }
-
-            // Validação de senha
-            if (senha.length < 6) {
-                setErros(prev => ({ ...prev, senha: true }));
-                setModalMessage("A senha deve conter pelo menos 6 caracteres.");
-                setModalType("error");
-                setShowModal(true);
-                return;
-            }
-
-            // Validação de data
-            const data = new Date(nascimento);
-            if (isNaN(data.getTime())) {
-                setErros(prev => ({ ...prev, nascimento: true }));
-                setModalMessage("Digite uma data de nascimento válida.");
-                setModalType("error");
-                setShowModal(true);
-                return;
-            }
-
-            // Se tudo ok → API
-            try {
-                setLoading(true);
-
-                const response = await fetch("https://localhost:7290/api/usuarios/cadastrar-usuario", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        nome,
-                        email,
-                        senha,
-                        dataNascimento: nascimento
-                    })
-                });
-
-                if (!response.ok) {
-                    setModalMessage("Erro ao cadastrar usuário.");
-                    setModalType("error");
-                    setShowModal(true);
-                    return;
-                }
-
-                const data = await response.json();
-                console.log("Usuário cadastrado:", data);
-
-                setModalMessage("Conta criada com sucesso!");
-                setModalType("success");
-                setShowModal(true);
-            } 
-            catch (err) {
-                console.error(err);
-                setModalMessage("Erro inesperado ao cadastrar.");
-                setModalType("error");
-                setShowModal(true);
-            } 
-            finally {
-                setLoading(false);
             }
         }
-
-        async function verificarEmail(emailDigitado) {
-            if (!emailDigitado || emailDigitado.trim() === "") return;
-
-            try {
-                const response = await fetch(`https://localhost:7290/api/usuarios/verificar-email?email=${emailDigitado}`);
-
-                const data = await response.json();
-
-                if (data.emailExiste) {
-                    setErros(prev => ({ ...prev, email: true }));
-                    setModalMessage("Este e-mail já está cadastrado.");
-                    setModalType("error");
-                    setShowModal(true);
-                }
-            } 
-            catch (error) {
-                console.error("Erro ao verificar email:", error);
-            }
+        catch (error) {
+            console.error("Erro ao verificar email:", error);
         }
+    }
 
 
 
     function closeModal() {
-    setShowModal(false);
+        setShowModal(false);
 
-    if (modalType === "success") {
-        window.location.href = "/login";
+        if (modalType === "success") {
+            window.location.href = "/login";
+        }
     }
-}
 
     return (
-        
+
         <div className="cadastro-container">
             {showModal && (
-            <div className="modal-overlay">
-                <div className={`modal-box ${modalType}`}>
-                    <h2>{modalType === "success" ? "Sucesso" : "Erro"}</h2>
-                    <p>{modalMessage}</p>
+                <div className="modal-overlay">
+                    <div className={`modal-box ${modalType}`}>
+                        <h2>{modalType === "success" ? "Sucesso" : "Erro"}</h2>
+                        <p>{modalMessage}</p>
 
-                    <button onClick={closeModal} className="modal-btn">
-                        OK
-                    </button>
+                        <button onClick={closeModal} className="modal-btn">
+                            OK
+                        </button>
+                    </div>
                 </div>
-            </div>
-        )}
+            )}
 
             <div className="cadastro-image"></div>
 
@@ -179,9 +179,9 @@ function cadastroREVISU() {
 
                         <label className="cadastro-label">Usuário</label>
                         <div className="input-wrapper">
-                            <input 
+                            <input
                                 className={`cadastro-input ${erros.nome ? "input-error" : ""}`}
-                                type="text" 
+                                type="text"
                                 value={nome}
                                 onChange={(e) => {
                                     setNome(e.target.value);
@@ -192,7 +192,7 @@ function cadastroREVISU() {
 
                         <label className="cadastro-label">E-mail</label>
                         <div className="input-wrapper">
-                            <input 
+                            <input
                                 className={`cadastro-input ${erros.email ? "input-error" : ""}`}
                                 type="email"
                                 value={email}
@@ -236,7 +236,7 @@ function cadastroREVISU() {
                             Data de nascimento
                         </label>
                         <div className="input-wrapper small">
-                            <input 
+                            <input
                                 className={`cadastro-input small ${erros.nascimento ? "input-error" : ""}`}
                                 type="date"
                                 value={nascimento}
@@ -247,7 +247,7 @@ function cadastroREVISU() {
                             />
                         </div>
 
-                        <button 
+                        <button
                             className="cadastro-btn"
                             onClick={cadastrarUsuario}
                             disabled={loading}
