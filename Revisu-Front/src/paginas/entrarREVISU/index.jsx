@@ -87,7 +87,8 @@ function LoginREVISU() {
                     </button>
 
                     <p className="signup">
-                        Ainda não possui uma conta? <Link to="/cadastro">Cadastrar-se</Link>
+                        Ainda não possui uma conta?{" "}
+                        <a href="/cadastro">Cadastrar-se</a>
                     </p>
                 </div>
             </div>
