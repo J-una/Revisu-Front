@@ -1,86 +1,82 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { LuScissorsLineDashed } from "react-icons/lu";
 import { RiFilmAiLine } from "react-icons/ri";
-import { PiFilmReel } from "react-icons/pi";
+import { PiFilmReel, PiFilmSlateBold } from "react-icons/pi";
 import { FaStar } from "react-icons/fa";
 import { BsFillPersonCheckFill, BsFillPersonDashFill, BsPersonBoundingBox } from "react-icons/bs";
 import { CiImageOff } from "react-icons/ci";
 import './style.css'
-import { slideObra } from "../../dados/slideObra.js";
-import { slideCelebridade } from "../../dados/slideCelebridades.js";
-import { slideDiretore } from "../../dados/slideDiretor.js";
 import { generoColors } from "../../dados/generoColors.js";
 
 function bibliotecaREVISU() {
-    const [indexCarroselHome, setIndexCarroselHome] = useState(0);
     const [indexCarroselObra, setIndexCarroselObra] = useState(0);
     const [indexCarroselCele, setIndexCarroselCele] = useState(0);
     const [indexCarroselDire, setIndexCarroselDire] = useState(0);
-    const [slidesObra, setSlideObra] = useState(slideObra)
-    const [slidesCelebridades, setSlidesCelebridades] = useState(slideCelebridade)
-    const [slidesDiretores, setSlidesDiretores] = useState(slideDiretore)
-    const [marcado, setMarcado] = useState(true);
-    const generosColors = generoColors;
 
-    function arredondarNota(nota) {
-        const primeiraCasa = Math.floor(nota * 10) / 10;
-        const segundaCasa = Math.floor((nota * 100) % 10);
+    const [loading, setLoading] = useState(true);
+    const [usuario, setUsuario] = useState(() => {
+        const usuarioSession = sessionStorage.getItem("usuario");
+        if (usuarioSession) {
+            const data = JSON.parse(usuarioSession);
+            return data.idUsuario; // pega somente o GUID do usuário
+        }
+        return ""; // valor padrão se não houver ninguém logado
+    });
+    const [biblioteca, setBiblioteca] = useState({
+        obras: [],
+        atores: [],
+        diretores: [],
+    });
 
-        if (segundaCasa >= 6) {
-            return (primeiraCasa + 0.1).toFixed(1);
+    useEffect(() => {
+        async function carregarBiblioteca() {
+            try {
+                setLoading(true); // começa carregando
+
+                const resp = await fetch(
+                    `https://localhost:44348/api/Recomendacao/listar-biblioteca/${usuario}`
+                );
+
+                const data = await resp.json();
+
+                // se vier array, pega o primeiro; se vier objeto direto, usa ele
+                const payload = Array.isArray(data) ? data[0] ?? {} : data ?? {};
+
+                setBiblioteca({
+                    obras: payload.obras ?? [],
+                    atores: payload.atores ?? [],
+                    diretores: payload.diretores ?? [],
+                });
+            } catch (e) {
+                console.error("Erro ao buscar biblioteca:", e);
+            } finally {
+                setLoading(false); // termina carregamento
+            }
         }
 
-        return primeiraCasa.toFixed(1);
-    }
+        carregarBiblioteca();
+    }, []);
 
-    const visibleCount4 = 4;
-    const visibleCount2 = 2;
-    const stepCele = 2;
+    const obras = biblioteca.obras || [];
+    const atores = biblioteca.atores || [];
+    const diretores = biblioteca.diretores || [];
 
-    function nextSlideObra() {
-        setIndexCarroselObra((prev) => (prev + 1) % slidesObra.length);
-    }
+    const generoCountMap = useMemo(() => {
+        const map = {};
 
-    function prevSlideObra() {
-        setIndexCarroselObra((prev) => (prev - 1 + slidesObra.length) % slidesObra.length);
-    }
+        const acumulaGeneros = (lista) => {
+            lista.forEach((item) => {
+                (item.generos || []).forEach((g) => {
+                    map[g] = (map[g] || 0) + 1;
+                });
+            });
+        };
 
-    function nextSlideCele() {
-        setIndexCarroselCele((prev) => (prev + stepCele) % slidesCelebridades.length);
-    }
+        acumulaGeneros(obras);
+        acumulaGeneros(atores);
 
-    function prevSlideCele() {
-        setIndexCarroselCele((prev) => (prev - stepCele + slidesCelebridades.length) % slidesCelebridades.length);
-    }
-
-    function nextSlideDire() {
-        setIndexCarroselDire((prev) => (prev + 1) % slidesDiretores.length);
-    }
-
-    function prevSlideDire() {
-        setIndexCarroselDire((prev) => (prev - 1 + slidesDiretores.length) % slidesDiretores.length);
-    }
-
-    function getVisibleSlidesObras() {
-        return Array.from({ length: visibleCount4 }, (_, i) => {
-            const slideIndex = (indexCarroselObra + i) % slidesObra.length;
-            return { ...slidesObra[slideIndex], _i: slideIndex };
-        });
-    }
-
-    function getVisibleSlidesCelebridades() {
-        return Array.from({ length: visibleCount2 }, (_, i) => {
-            const slideIndex = (indexCarroselCele + i) % slidesCelebridades.length;
-            return { ...slidesCelebridades[slideIndex], _i: slideIndex };
-        });
-    }
-
-    function getVisibleSlidesDiretores() {
-        return Array.from({ length: visibleCount2 }, (_, i) => {
-            const slideIndex = (indexCarroselDire + i) % slidesDiretores.length;
-            return { ...slidesDiretores[slideIndex], _i: slideIndex };
-        });
-    }
+        return map;
+    }, [obras, atores, diretores]);
 
     const generoColorsBiblioteca = [
         { genero: "Ação", cor: "#E74C3C" },
@@ -112,97 +108,326 @@ function bibliotecaREVISU() {
         { genero: "Guerra e Política", cor: "#566573" }
     ];
 
-    const generoQtd = [
-        { genero: ["História", "Guerra", "Música"] },
-        { genero: ["Terror", "Música", "Romance"] },
-        { genero: ["Música", "Romance"] },
-        { genero: ["Mistério", "Novela", "Guerra"] },
-        { genero: ["Romance", "Guerra",] },
-        { genero: ["Ficção científica",] },
-        { genero: ["Cinema TV", "Notícias", "Guerra", "Música"] },
-        { genero: ["Thriller", "Romance"] },
-        { genero: ["Guerra", "Thriller", "Romance"] },
-        { genero: ["Faroeste", "Música", "Terror"] },
-        { genero: ["Ação e Aventura", "Família"] },
-        { genero: ["Crime", "Família", "Ação e Aventura"] },
-        { genero: ["Documentário", "Guerra e Política", "Ação e Aventura"] },
-        { genero: ["Drama", "Guerra e Política"] },
-        { genero: ["Infantil", "Notícias"] },
-        { genero: ["Faroeste", "Música", "Terror"] },
-        { genero: ["Ação e Aventura", "Família"] },
-        { genero: ["Crime", "Família", "Ação e Aventura"] },
-        { genero: ["Documentário", "Guerra e Política", "Ação e Aventura"] },
-        { genero: ["Drama", "Guerra e Política"] },
-        { genero: ["Infantil", "Notícias"] },
-        { genero: ["Ficção Científica e Fantasia", "Novela"] },
-        { genero: ["Mistério", "Novela", "Guerra"] },
-        { genero: ["Romance", "Guerra",] },
-        { genero: ["Ficção científica",] },
-        { genero: ["Cinema TV", "Notícias", "Guerra", "Música"] },
-        { genero: ["Thriller", "Romance"] },
-        { genero: ["Guerra", "Thriller", "Romance"] },
-        { genero: ["Música", "Romance"] },
-        { genero: ["Mistério", "Novela", "Guerra"] },
-        { genero: ["Romance", "Guerra",] },
-        { genero: ["Ficção científica",] },
-        { genero: ["Cinema TV", "Notícias", "Guerra", "Música"] },
-        { genero: ["Thriller", "Romance"] },
-        { genero: ["Guerra", "Thriller", "Romance"] },
-        { genero: ["Faroeste", "Música", "Terror"] },
-        { genero: ["Ação e Aventura", "Família"] },
-        { genero: ["Crime", "Família", "Ação e Aventura"] },
-        { genero: ["Documentário", "Guerra e Política", "Ação e Aventura"] },
-        { genero: ["Drama", "Guerra e Política"] },
-        { genero: ["Infantil", "Notícias"] },
-        { genero: ["Faroeste", "Música", "Terror"] },
-        { genero: ["Ação e Aventura", "Família"] },
-        { genero: ["Crime", "Família", "Ação e Aventura"] },
-        { genero: ["Documentário", "Guerra e Política", "Ação e Aventura"] },
-        { genero: ["Drama", "Guerra e Política"] },
-        { genero: ["Infantil", "Notícias"] },
-        { genero: ["Ficção Científica e Fantasia", "Novela"] },
-        { genero: ["Mistério", "Novela", "Guerra"] },
-        { genero: ["Romance", "Guerra",] },
-        { genero: ["Música", "Romance"] },
-        { genero: ["Mistério", "Novela", "Guerra"] },
-        { genero: ["Romance", "Guerra",] },
-        { genero: ["Ficção científica",] },
-        { genero: ["Cinema TV", "Notícias", "Guerra", "Música"] },
-        { genero: ["Thriller", "Romance"] },
-        { genero: ["Guerra", "Thriller", "Romance"] },
-        { genero: ["Faroeste", "Música", "Terror"] },
-        { genero: ["Ação e Aventura", "Família"] },
-        { genero: ["Crime", "Família", "Ação e Aventura"] },
-        { genero: ["Documentário", "Guerra e Política", "Ação e Aventura"] },
-        { genero: ["Drama", "Guerra e Política"] },
-        { genero: ["Infantil", "Notícias"] },
-        { genero: ["Faroeste", "Música", "Terror"] },
-        { genero: ["Ação e Aventura", "Família"] },
-        { genero: ["Crime", "Família", "Ação e Aventura"] },
-        { genero: ["Documentário", "Guerra e Política", "Ação e Aventura"] },
-        { genero: ["Drama", "Guerra e Política"] },
-        { genero: ["Infantil", "Notícias"] },
-        { genero: ["Ficção Científica e Fantasia", "Novela"] },
-        { genero: ["Mistério", "Novela", "Guerra"] },
-        { genero: ["Romance", "Guerra",] },
-    ];
+    const generoColorsSorted = useMemo(() => {
+        return [...generoColorsBiblioteca]
+            .filter(g => generoCountMap[g.genero]) // só gêneros com pelo menos 1 ocorrência
+            .sort((a, b) => (generoCountMap[b.genero] || 0) - (generoCountMap[a.genero] || 0));
+    }, [generoColorsBiblioteca, generoCountMap]);
 
-    const generoCountMap = generoQtd.reduce((acc, item) => {
-        item.genero.forEach((g) => {
-            acc[g] = (acc[g] || 0) + 1;
+    function arredondarNota(nota) {
+        const primeiraCasa = Math.floor(nota * 10) / 10;
+        const segundaCasa = Math.floor((nota * 100) % 10);
+
+        if (segundaCasa >= 6) {
+            return (primeiraCasa + 0.1).toFixed(1);
+        }
+
+        return primeiraCasa.toFixed(1);
+    }
+
+    const visibleCount4 = 4;
+    const visibleCount2 = 2;
+    const stepCele = 2;
+
+    // ====== CARROSSEL OBRAS ==========
+    function nextSlideObra() {
+        const total = obras.length;
+        if (!total) return;
+        setIndexCarroselObra((prev) => (prev + 1) % total);
+    }
+
+    function prevSlideObra() {
+        const total = obras.length;
+        if (!total) return;
+        setIndexCarroselObra((prev) => (prev - 1 + total) % total);
+    }
+
+    function getVisibleSlidesObras() {
+        if (!obras.length) return [];
+        const qtd = Math.min(visibleCount4, obras.length);
+        return Array.from({ length: qtd }, (_, i) => {
+            const slideIndex = (indexCarroselObra + i) % obras.length;
+            return { ...obras[slideIndex], _i: slideIndex };
         });
-        return acc;
-    }, {});
+    }
 
-    const generoColorsSorted = [...generoColorsBiblioteca].sort((a, b) => {
-        return (generoCountMap[b.genero] || 0) - (generoCountMap[a.genero] || 0);
-    });
+    // ====== CARROSSEL CELEBRIDADES (atores) ==========
+    function nextSlideCele() {
+        const total = atores.length;
+        if (!total) return;
+        setIndexCarroselCele((prev) => (prev + stepCele) % total);
+    }
+
+    function prevSlideCele() {
+        const total = atores.length;
+        if (!total) return;
+        setIndexCarroselCele((prev) => (prev - stepCele + total) % total);
+    }
+
+    function getVisibleSlidesCelebridades() {
+        if (!atores.length) return [];
+        const qtd = Math.min(visibleCount4, atores.length);
+        return Array.from({ length: qtd }, (_, i) => {
+            const slideIndex = (indexCarroselCele + i) % atores.length;
+            return { ...atores[slideIndex], _i: slideIndex };
+        });
+    }
+
+    // ====== CARROSSEL DIRETORES ==========
+    function nextSlideDire() {
+        const total = diretores.length;
+        if (!total) return;
+        setIndexCarroselDire((prev) => (prev + 1) % total);
+    }
+
+    function prevSlideDire() {
+        const total = diretores.length;
+        if (!total) return;
+        setIndexCarroselDire((prev) => (prev - 1 + total) % total);
+    }
+
+    function getVisibleSlidesDiretores() {
+        if (!diretores.length) return [];
+        const qtd = Math.min(visibleCount2, diretores.length);
+        return Array.from({ length: qtd }, (_, i) => {
+            const slideIndex = (indexCarroselDire + i) % diretores.length;
+            return { ...diretores[slideIndex], _i: slideIndex };
+        });
+    }
+
+    async function salvarNaBibliotecaObra(idObra) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: idObra,
+                        idElenco: null,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            setBiblioteca(prev => ({
+                ...prev,
+                obras: prev.obras.map(o => {
+                    const oid = o.idObra || o.id;
+                    if (oid === idObra) {
+                        return { ...o, marcado: true };
+                    }
+                    return o;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    async function salvarNaBibliotecaCele(idElenco) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: null,
+                        idElenco: idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            setBiblioteca(prev => ({
+                ...prev,
+                atores: prev.atores.map(o => {
+                    const oid = o.idElenco || o.id;
+                    if (oid === idElenco) {
+                        return { ...o, marcado: true };
+                    }
+                    return o;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+    async function salvarNaBibliotecaDire(idElenco) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: null,
+                        idElenco: idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            setBiblioteca(prev => ({
+                ...prev,
+                diretores: prev.diretores.map(o => {
+                    const oid = o.idElenco || o.id;
+                    if (oid === idElenco) {
+                        return { ...o, marcado: true };
+                    }
+                    return o;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+    async function removerNaBibliotecaObra(idObra) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: idObra,
+                        idElenco: null,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setBiblioteca(prev => ({
+                ...prev,
+                obras: prev.obras.map(o => {
+                    const oid = o.idObra || o.id;
+                    if (oid === idObra) {
+                        return { ...o, marcado: false };
+                    }
+                    return o;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+    async function removerNaBibliotecaCele(idElenco) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: null,
+                        idElenco: idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setBiblioteca(prev => ({
+                ...prev,
+                atores: prev.atores.map(o => {
+                    const oid = o.idElenco || o.id;
+                    if (oid === idElenco) {
+                        return { ...o, marcado: false };
+                    }
+                    return o;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+    async function removerNaBibliotecaDire(idElenco) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: null,
+                        idElenco: idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setBiblioteca(prev => ({
+                ...prev,
+                diretores: prev.diretores.map(o => {
+                    const oid = o.idElenco || o.id;
+                    if (oid === idElenco) {
+                        return { ...o, marcado: false };
+                    }
+                    return o;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
 
     return (
         <div className="biblioteca-container">
             <div><h1>-</h1></div>
-            <div className="biblioteca-content">
 
+            {/* OVERLAY DE CARREGAMENTO */}
+            {loading && (
+                <div className="home-loading-overlay">
+                    <div className="home-loading-inner">
+                        <PiFilmSlateBold className="home-loading-icon" />
+                        <p className="home-loading-text">Carregando Recomendações...</p>
+                    </div>
+                </div>
+            )}
+
+            <div className="biblioteca-content">
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <div className='tituloBiblioteca'>
                         <h1>MINHA BIBLIOTECA</h1>
@@ -235,100 +460,139 @@ function bibliotecaREVISU() {
 
                 <div className="carrousel-obrasDesta">
                     <div className="titulo">
-                        <p style={{ color: '#9A15D8', marginLeft: '10px' }}>OBRAS</p>
-                        <p style={{ marginLeft: '10px' }}>PREFERIDOS:</p>
+                        <p style={{ color: "#9A15D8", marginLeft: "10px" }}>OBRAS</p>
+                        <p style={{ marginLeft: "10px" }}>EM DESTAQUE</p>
                     </div>
 
-                    <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-                        <p>Principais filmes marcados.</p>
+                    <div style={{ marginTop: "10px", marginLeft: "5%" }}>
+                        <p>Principais obras de acordo com telespectadores.</p>
                     </div>
 
                     <div className="container-carrousel-obrasDesta">
-                        <button className="arrow left" onClick={prevSlideObra}>❮</button>
+                        <button className="arrow left" onClick={prevSlideObra}>
+                            ❮
+                        </button>
 
                         <div className="slides-row">
                             {getVisibleSlidesObras().map((slide) => (
-                                <div className="card-obra" key={slide._i} style={{
-                                    boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8',
-                                    border: marcado == true ? '2px solid #4cd815' : '2px solid #9a15d8'
-                                }}>
-
-                                    <div >
+                                <div
+                                    className="card-obra"
+                                    key={slide._i}
+                                    style={{
+                                        boxShadow:
+                                            slide.marcado === true
+                                                ? "0px -10px 12px -4px #4cd815"
+                                                : "0px -10px 12px -4px #9A15D8",
+                                        border:
+                                            slide.marcado === true
+                                                ? "2px solid #4cd815"
+                                                : "2px solid #9a15d8",
+                                    }}
+                                >
+                                    <div>
                                         <img
                                             className="slide-imageObras"
                                             src={`https://image.tmdb.org/t/p/w500/${slide.imagem}`}
-                                            alt={slide.titulo}
+                                            alt={slide.nome || slide.titulo}
                                         />
                                     </div>
 
                                     <div>
-                                        <p className="title-obra">{slide.titulo}</p>
+                                        <p className="title-obra">{slide.nome || slide.titulo}</p>
                                     </div>
 
                                     <div>
                                         <div>
+                                            <p>{slide.tipo === "Filme" ? "Filme" : "Série"}</p>
+                                        </div>
+                                        <button
+                                            className="icon-btn sinopse-btn"
+                                            onClick={() =>
+                                                navigate(
+                                                    `/sinopse-obra/${slide.idObra || slide.id}/${usuario}`
+                                                )
+                                            }
+                                        >
+                                            <PiFilmReel className="icon" />
+                                            <p style={{ marginLeft: "10px" }}>Sinopse</p>
+                                        </button>
+
+                                        <div style={{ display: slide.marcado === true ? "none" : "" }}>
                                             <button
-                                                className="icon-btn sinopse-btn"
-                                                onClick={() => navigate("/sinopse-obra/" + slide.idObra)}
+                                                className="icon-btn marcar-btn"
+                                                style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
+                                                onClick={() => salvarNaBibliotecaObra(slide.idObra || slide.id)}
                                             >
-                                                <PiFilmReel className="icon" />
-                                                <p style={{ marginLeft: "10px" }}>Sinopse</p>
+                                                <RiFilmAiLine className="icon" />
+                                                <p style={{ marginLeft: "10px" }}>Marcar</p>
                                             </button>
                                         </div>
 
-                                        <div style={{ display: marcado === true ? 'none' : '' }}>
-                                            <button className="icon-btn marcar-btn" style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}>
-                                                <RiFilmAiLine className='icon' />
-                                                <p style={{ marginLeft: '10px' }}>Marcar</p>
-                                            </button>
-                                        </div>
-
-                                        <div style={{ display: marcado !== true ? 'none' : '' }}>
-                                            <button className="icon-btn desmarcar-btn" style={{ boxShadow: '1px 1px 10px 1px #9A15D8' }}>
-                                                <LuScissorsLineDashed className='icon' />
-                                                <p style={{ marginLeft: '10px' }}>Desmarcar</p>
+                                        <div style={{ display: slide.marcado === false ? "none" : "" }}>
+                                            <button
+                                                className="icon-btn desmarcar-btn"
+                                                style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}
+                                                onClick={() => removerNaBibliotecaObra(slide.idObra || slide.id)}
+                                            >
+                                                <LuScissorsLineDashed className="icon" />
+                                                <p style={{ marginLeft: "10px" }}>Desmarcar</p>
                                             </button>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <p className="title-obra"><FaStar style={{ color: '#d8c415ff' }} /> {arredondarNota(slide.notaMedia)}</p>
+                                        <p className="title-obra">
+                                            <FaStar style={{ color: "#d8c415ff" }} />{" "}
+                                            {arredondarNota(slide.notaMedia)}
+                                        </p>
                                     </div>
-
                                 </div>
                             ))}
                         </div>
 
-                        <button className="arrow right" onClick={nextSlideObra}>❯</button>
+                        <button className="arrow right" onClick={nextSlideObra}>
+                            ❯
+                        </button>
                     </div>
                 </div>
 
                 <div className="carrousel-celeDesta">
-
                     <div className="titulo">
-                        <p style={{ color: '#9A15D8', marginLeft: '10px' }}>CELEBRIDADES</p>
-                        <p style={{ marginLeft: '10px' }}>PREFERIDOS:</p>
+                        <p style={{ color: "#9A15D8", marginLeft: "10px" }}>CELEBRIDADES</p>
+                        <p style={{ marginLeft: "10px" }}>EM DESTAQUE</p>
                     </div>
 
-                    <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-                        <p>Principais Atores e Atrizes marcados.</p>
+                    <div style={{ marginTop: "10px", marginLeft: "5%" }}>
+                        <p>Principais Atores e Atrizes de acordo com telespectadores.</p>
                     </div>
 
                     <div className="container-carrousel-celeDesta">
-                        <button className="arrow left" onClick={prevSlideCele}>❮</button>
+                        <button className="arrow left" onClick={prevSlideCele}>
+                            ❮
+                        </button>
 
                         <div className="slides-grid-celeDesta">
                             {getVisibleSlidesCelebridades().map((cele) => (
-                                <div className="card-celeDesta" key={cele._i} style={{
-                                    boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8',
-                                    border: marcado == true ? '2px solid #4cd815' : '2px solid #9a15d8'
-                                }}>
-
+                                <div
+                                    className="card-celeDesta"
+                                    key={cele._i}
+                                    style={{
+                                        boxShadow:
+                                            cele.marcado === true
+                                                ? "0px -10px 12px -4px #4cd815"
+                                                : "0px -10px 12px -4px #9A15D8",
+                                        border:
+                                            cele.marcado === true
+                                                ? "2px solid #4cd815"
+                                                : "2px solid #9a15d8",
+                                    }}
+                                >
                                     <div className="foto-wrapper">
-                                        {cele.foto ? (
+                                        {cele.imagem || cele.foto ? (
                                             <img
                                                 className="slide-imageceleDesta"
-                                                src={`https://image.tmdb.org/t/p/w500/${cele.foto}`}
+                                                src={`https://image.tmdb.org/t/p/w500/${cele.imagem || cele.foto
+                                                    }`}
                                                 alt={cele.nome}
                                             />
                                         ) : (
@@ -339,17 +603,16 @@ function bibliotecaREVISU() {
                                         )}
                                     </div>
 
-
-                                    <div className="info-celeDesta" style={{ width: '77%' }}>
+                                    <div className="info-celeDesta" style={{ width: "77%" }}>
                                         <p className="title-celeDesta">{cele.nome}</p>
 
                                         <div className="generos-celeDesta">
-                                            {cele.generos.map((g, idx) => (
+                                            {(cele.generos || []).map((g, idx) => (
                                                 <span
                                                     className="genero-chip"
                                                     key={idx}
                                                     style={{
-                                                        borderColor: generosColors[g] || "#9A15D8",  // fallback caso não exista
+                                                        borderColor: generoColors[g] || "#9A15D8",
                                                     }}
                                                 >
                                                     {g}
@@ -358,20 +621,31 @@ function bibliotecaREVISU() {
                                         </div>
                                     </div>
 
-                                    <div style={{ width: '8%' }}>
-                                        <button className="icon-btn">
-                                            <BsPersonBoundingBox className="icon" onClick={() => navigate("/detalhe-cele-dire")} style={{ color: '#d8c415ff' }} />
+                                    <div style={{ width: "8%" }}>
+                                        <button className="icon-btn" onClick={() => navigate(`/detalhe-cele-dire/${cele.idElenco}/${usuario}`)}>
+                                            <BsPersonBoundingBox
+                                                className="icon"
+                                                style={{ color: "#d8c415ff" }}
+                                            />
                                         </button>
 
-                                        <div style={{ marginTop: '10%' }}>
-                                            <div style={{ display: marcado === true ? 'none' : '' }}>
-                                                <button className="icon-btn">
-                                                    <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
+                                        <div style={{ marginTop: "10%" }}>
+                                            <div style={{ display: cele.marcado === true ? "none" : "" }}>
+                                                <button className="icon-btn"
+                                                    onClick={() => salvarNaBibliotecaCele(cele.idElenco)}>
+                                                    <BsFillPersonCheckFill
+                                                        className="icon"
+                                                        style={{ color: "#4cd815" }}
+                                                    />
                                                 </button>
                                             </div>
-                                            <div style={{ display: marcado != true ? 'none' : '' }}>
-                                                <button className="icon-btn">
-                                                    <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
+                                            <div style={{ display: cele.marcado === false ? "none" : "" }}>
+                                                <button className="icon-btn"
+                                                    onClick={() => removerNaBibliotecaCele(cele.idElenco)}>
+                                                    <BsFillPersonDashFill
+                                                        className="icon"
+                                                        style={{ color: "#9A15D8" }}
+                                                    />
                                                 </button>
                                             </div>
                                         </div>
@@ -380,35 +654,49 @@ function bibliotecaREVISU() {
                             ))}
                         </div>
 
-                        <button className="arrow right" onClick={nextSlideCele}>❯</button>
+                        <button className="arrow right" onClick={nextSlideCele}>
+                            ❯
+                        </button>
                     </div>
                 </div>
 
                 <div className="carrousel-diretDesta">
                     <div className="titulo">
-                        <p style={{ color: '#9A15D8', marginLeft: '10px' }}>DIRETORES</p>
-                        <p style={{ marginLeft: '10px' }}>EM DESTAQUE</p>
+                        <p style={{ color: "#9A15D8", marginLeft: "10px" }}>DIRETORES</p>
+                        <p style={{ marginLeft: "10px" }}>EM DESTAQUE</p>
                     </div>
 
-                    <div style={{ marginTop: '10px', marginLeft: '5%' }}>
-                        <p>Principais Diretores marcados.</p>
+                    <div style={{ marginTop: "10px", marginLeft: "5%" }}>
+                        <p>Principais Diretores de acordo com telespectadores.</p>
                     </div>
 
                     <div className="container-carrousel-diretDesta">
-                        <button className="arrow left" onClick={prevSlideDire}>❮</button>
+                        <button className="arrow left" onClick={prevSlideDire}>
+                            ❮
+                        </button>
 
                         <div className="slides-grid-diretDesta">
                             {getVisibleSlidesDiretores().map((dire) => (
-                                <div className="card-diretDesta" key={dire._i} style={{
-                                    boxShadow: marcado == true ? '0px -10px 12px -4px #4cd815' : '0px -10px 12px -4px #9A15D8',
-                                    border: marcado == true ? '2px solid #4cd815' : '2px solid #9a15d8'
-                                }}>
-
-                                    <div className="foto-wrapper" style={{ width: '15%' }}>
-                                        {dire.foto ? (
+                                <div
+                                    className="card-diretDesta"
+                                    key={dire._i}
+                                    style={{
+                                        boxShadow:
+                                            dire.marcado === true
+                                                ? "0px -10px 12px -4px #4cd815"
+                                                : "0px -10px 12px -4px #9A15D8",
+                                        border:
+                                            dire.marcado === true
+                                                ? "2px solid #4cd815"
+                                                : "2px solid #9a15d8",
+                                    }}
+                                >
+                                    <div className="foto-wrapper" style={{ width: "15%" }}>
+                                        {dire.imagem || dire.foto ? (
                                             <img
                                                 className="slide-imageceleDesta"
-                                                src={`https://image.tmdb.org/t/p/w500/${dire.foto}`}
+                                                src={`https://image.tmdb.org/t/p/w500/${dire.imagem || dire.foto
+                                                    }`}
                                                 alt={dire.nome}
                                             />
                                         ) : (
@@ -419,11 +707,11 @@ function bibliotecaREVISU() {
                                         )}
                                     </div>
 
-                                    <div className="info-diretDesta" style={{ width: '77%' }}>
+                                    <div className="info-diretDesta" style={{ width: "77%" }}>
                                         <p className="title-diretDesta">{dire.nome}</p>
 
                                         <div className="generos-celeDesta">
-                                            {dire.obras.map((g, idx) => (
+                                            {(dire.obras || []).map((g, idx) => (
                                                 <span
                                                     className="genero-chip"
                                                     key={idx}
@@ -437,20 +725,31 @@ function bibliotecaREVISU() {
                                         </div>
                                     </div>
 
-                                    <div style={{ width: '8%' }}>
-                                        <button className="icon-btn">
-                                            <BsPersonBoundingBox className="icon" onClick={() => navigate("/detalhe-cele-dire")} style={{ color: '#d8c415ff' }} />
+                                    <div style={{ width: "8%" }}>
+                                        <button className="icon-btn" onClick={() => navigate(`/detalhe-cele-dire/${dire.idElenco}/${usuario}`)}>
+                                            <BsPersonBoundingBox
+                                                className="icon"
+                                                style={{ color: "#d8c415ff" }}
+                                            />
                                         </button>
 
-                                        <div style={{ marginTop: '10%' }}>
-                                            <div style={{ display: marcado == true ? 'none' : '' }}>
-                                                <button className="icon-btn">
-                                                    <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
+                                        <div style={{ marginTop: "10%" }}>
+                                            <div style={{ display: dire.marcado === true ? "none" : "" }}>
+                                                <button className="icon-btn"
+                                                    onClick={() => salvarNaBibliotecaDire(dire.idElenco)}>
+                                                    <BsFillPersonCheckFill
+                                                        className="icon"
+                                                        style={{ color: "#4cd815" }}
+                                                    />
                                                 </button>
                                             </div>
-                                            <div style={{ display: marcado != true ? 'none' : '' }}>
-                                                <button className="icon-btn">
-                                                    <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
+                                            <div style={{ display: dire.marcado === false ? "none" : "" }}>
+                                                <button className="icon-btn"
+                                                    onClick={() => removerNaBibliotecaDire(dire.idElenco)}>
+                                                    <BsFillPersonDashFill
+                                                        className="icon"
+                                                        style={{ color: "#9A15D8" }}
+                                                    />
                                                 </button>
                                             </div>
                                         </div>
@@ -459,7 +758,9 @@ function bibliotecaREVISU() {
                             ))}
                         </div>
 
-                        <button className="arrow right" onClick={nextSlideDire}>❯</button>
+                        <button className="arrow right" onClick={nextSlideDire}>
+                            ❯
+                        </button>
                     </div>
                 </div>
             </div>

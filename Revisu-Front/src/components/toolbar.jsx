@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect,useContext } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaCog, FaUser } from "react-icons/fa";
 import { ImExit } from "react-icons/im";
@@ -10,12 +10,12 @@ export default function Toolbar({ logado }) {
     const { logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const [usuario, setUsuario] = useState(() => {
-    const usuarioSession = sessionStorage.getItem("usuario");
-    if (usuarioSession) {
-        const data = JSON.parse(usuarioSession);
-        return data.idUsuario; // pega somente o GUID do usuário
-    }
-    return ""; // valor padrão se não houver ninguém logado
+        const usuarioSession = sessionStorage.getItem("usuario");
+        if (usuarioSession) {
+            const data = JSON.parse(usuarioSession);
+            return data; // pega somente o GUID do usuário
+        }
+        return ""; // valor padrão se não houver ninguém logado
     });
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -124,7 +124,7 @@ export default function Toolbar({ logado }) {
                 </nav>
 
                 <nav className="nav-right">
-                    
+
                     {logado && (
                         <button className="icon-btn" onClick={() => navigate("/editar")}>
                             <FaCog className="icon" />
@@ -135,19 +135,25 @@ export default function Toolbar({ logado }) {
                         <button
                             className="icon-btn"
                             onClick={() => {
-                                logout();        
-                                window.location.href = "/home";; 
+                                logout();
+                                window.location.href = "/home";;
                             }}
                         >
                             <ImExit className="icon" />
                         </button>
                     )}
 
-                    <FaUser className="icon" style={{ marginTop: "5%" }} />
+                    <FaUser className="icon" style={{ marginTop: "10px" }} />
 
                     {!logado && (
                         <div style={{ marginTop: "5%" }}>
                             <Link to="/login">Entrar</Link>
+                        </div>
+                    )}
+
+                    {logado && (
+                        <div style={{ marginTop: "10px" }}>
+                            <a>{usuario.nome}</a>
                         </div>
                     )}
                 </nav>
@@ -189,7 +195,7 @@ export default function Toolbar({ logado }) {
                                             <div
                                                 className="toolbar-search-item"
                                                 key={o.id}
-                                                onClick={() => handleSelectItem(`/sinopse-obra/${o.id}/${usuario}`)}
+                                                onClick={() => handleSelectItem(`/sinopse-obra/${o.id}/${usuario.idUsuario}`)}
                                             >
                                                 <div className="toolbar-search-thumb">
                                                     {o.imagem ? (
@@ -219,7 +225,7 @@ export default function Toolbar({ logado }) {
                                             <div
                                                 className="toolbar-search-item"
                                                 key={a.id}
-                                                onClick={() => handleSelectItem(`/detalhe-cele-dire/${a.id}/${usuario}`)}
+                                                onClick={() => handleSelectItem(`/detalhe-cele-dire/${a.id}/${usuario.idUsuario}`)}
                                             >
                                                 <div className="toolbar-search-thumb">
                                                     {a.imagem ? (
@@ -248,7 +254,7 @@ export default function Toolbar({ logado }) {
                                             <div
                                                 className="toolbar-search-item"
                                                 key={d.id}
-                                                onClick={() => handleSelectItem(`/detalhe-cele-dire/${d.id}/${usuario}`)}
+                                                onClick={() => handleSelectItem(`/detalhe-cele-dire/${d.id}/${usuario.idUsuario}`)}
                                             >
                                                 <div className="toolbar-search-thumb">
                                                     {d.imagem ? (
