@@ -17,6 +17,7 @@ function DetalheCeleDireREVISU() {
     const [loading, setLoading] = useState(true);
 
     const [detalheCeleDire, setDetalheCeleDire] = useState({
+        idElenco: "",
         biografia: "",
         dataNascimento: "",
         dataMorte: "",
@@ -31,9 +32,6 @@ function DetalheCeleDireREVISU() {
         atores: [],
         diretores: [],
     });
-
-    const [slidesObra, setSlideObra] = useState(slideObra)
-    const [slidesCelebridades, setSlidesCelebridades] = useState(slideCelebridade)
 
     const [indexCarroselObra, setIndexCarroselObra] = useState(0);
     const [indexCarroselCele, setIndexCarroselCele] = useState(0);
@@ -59,6 +57,7 @@ function DetalheCeleDireREVISU() {
                 const dados = await resp.json();
 
                 setDetalheCeleDire({
+                    idElenco: dados.idElenco,
                     biografia: dados.biografia,
                     dataNascimento: dados.dataNascimento,
                     dataMorte: dados.dataMorte,
@@ -104,8 +103,6 @@ function DetalheCeleDireREVISU() {
 
         carregarRelacionados();
     }, [idElenco, idUsuario]);
-
-    // console.log(relacionados);
 
     const obras = relacionados.obras || [];
     const atores = relacionados.atores || [];
@@ -198,7 +195,277 @@ function DetalheCeleDireREVISU() {
             return { ...diretores[slideIndex], _i: slideIndex };
         });
     }
+    // OBRA RELACIONADA
+    async function salvarNaBibliotecaObra(idObra) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario,
+                        idObra: idObra,
+                        idElenco: null,
+                    }),
+                }
+            );
 
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            // só atualiza OBRAS relacionadas
+            setRelacionados(prev => ({
+                ...prev,
+                obras: prev.obras.map(o => {
+                    const oid = o.idObra || o.id;
+                    return oid === idObra ? { ...o, marcado: true } : o;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    async function removerNaBibliotecaObra(idObra) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario,
+                        idObra: idObra,
+                        idElenco: null,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setRelacionados(prev => ({
+                ...prev,
+                obras: prev.obras.map(o => {
+                    const oid = o.idObra || o.id;
+                    return oid === idObra ? { ...o, marcado: false } : o;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    // CELEBRIDADE PRINCIPAL (CIMA DA PÁGINA)
+    async function salvarNaBibliotecaCelePrincipal() {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario,
+                        idObra: null,
+                        idElenco: detalheCeleDire.idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            setDetalheCeleDire(prev => ({
+                ...prev,
+                marcado: true,
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    async function removerNaBibliotecaCelePrincipal() {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario,
+                        idObra: null,
+                        idElenco: detalheCeleDire.idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setDetalheCeleDire(prev => ({
+                ...prev,
+                marcado: false,
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    // CELEBRIDADES RELACIONADAS (CARROSSEL DE BAIXO)
+    async function salvarNaBibliotecaCele(idElencoItem) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario,
+                        idObra: null,
+                        idElenco: idElencoItem,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            // ATUALIZA SÓ A LISTA DE ATORES RELACIONADOS
+            setRelacionados(prev => ({
+                ...prev,
+                atores: prev.atores.map(a => {
+                    const aid = a.idElenco || a.id;
+                    return aid === idElencoItem ? { ...a, marcado: true } : a;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    async function removerNaBibliotecaCele(idElencoItem) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario,
+                        idObra: null,
+                        idElenco: idElencoItem,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setRelacionados(prev => ({
+                ...prev,
+                atores: prev.atores.map(a => {
+                    const aid = a.idElenco || a.id;
+                    return aid === idElencoItem ? { ...a, marcado: false } : a;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    // DIRETORES RELACIONADOS
+    async function salvarNaBibliotecaDire(idElencoDire) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario,
+                        idObra: null,
+                        idElenco: idElencoDire,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            setRelacionados(prev => ({
+                ...prev,
+                diretores: prev.diretores.map(d => {
+                    const did = d.idElenco || d.id;
+                    return did === idElencoDire ? { ...d, marcado: true } : d;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    async function removerNaBibliotecaDire(idElencoDire) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario,
+                        idObra: null,
+                        idElenco: idElencoDire,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setRelacionados(prev => ({
+                ...prev,
+                diretores: prev.diretores.map(d => {
+                    const did = d.idElenco || d.id;
+                    return did === idElencoDire ? { ...d, marcado: false } : d;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
     return (
         <div className="detalheCeleDire-container">
             <div><h1>-</h1></div>
@@ -267,6 +534,7 @@ function DetalheCeleDireREVISU() {
                                         <button
                                             className="marcar-toggle marcar-btn"
                                             style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}
+                                            onClick={salvarNaBibliotecaCelePrincipal}
                                         >
                                             <RiFilmAiLine className="icon" />
                                             <p style={{ marginLeft: '10px' }}>Marcar</p>
@@ -275,6 +543,7 @@ function DetalheCeleDireREVISU() {
                                         <button
                                             className="marcar-toggle desmarcar-btn"
                                             style={{ boxShadow: '1px 1px 10px 1px #9A15D8' }}
+                                            onClick={removerNaBibliotecaCelePrincipal}
                                         >
                                             <LuScissorsLineDashed className="icon" />
                                             <p style={{ marginLeft: '10px' }}>Desmarcar</p>
@@ -395,7 +664,8 @@ function DetalheCeleDireREVISU() {
 
                                             <div style={{ marginTop: "10%" }}>
                                                 <div style={{ display: dire.marcado === true ? "none" : "" }}>
-                                                    <button className="icon-btn">
+                                                    <button className="icon-btn"
+                                                        onClick={() => salvarNaBibliotecaDire(dire.idElenco)}>
                                                         <BsFillPersonCheckFill
                                                             className="icon"
                                                             style={{ color: "#4cd815" }}
@@ -403,7 +673,8 @@ function DetalheCeleDireREVISU() {
                                                     </button>
                                                 </div>
                                                 <div style={{ display: dire.marcado === false ? "none" : " " }}>
-                                                    <button className="icon-btn">
+                                                    <button className="icon-btn"
+                                                        onClick={() => removerNaBibliotecaDire(dire.idElenco)}>
                                                         <BsFillPersonDashFill
                                                             className="icon"
                                                             style={{ color: "#9A15D8" }}
@@ -437,7 +708,17 @@ function DetalheCeleDireREVISU() {
 
                             <div className="slides-grid-celeDesta">
                                 {celeVisiveis.map((cele) => (
-                                    <div className="card-celeDesta" key={cele._i} style={{ boxShadow: cele.marcado === true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
+                                    <div className="card-celeDesta" key={cele._i}
+                                        style={{
+                                            boxShadow:
+                                                cele.marcado === true
+                                                    ? "0px -10px 12px -4px #4cd815"
+                                                    : "0px -10px 12px -4px #9A15D8",
+                                            border:
+                                                cele.marcado === true
+                                                    ? "2px solid #4cd815"
+                                                    : "2px solid #9a15d8",
+                                        }}>
 
                                         <div className="foto-wrapper">
                                             {cele.foto ? (
@@ -480,12 +761,14 @@ function DetalheCeleDireREVISU() {
 
                                             <div style={{ marginTop: '10%' }}>
                                                 <div style={{ display: cele.marcado === true ? 'none' : '' }}>
-                                                    <button className="icon-btn">
+                                                    <button className="icon-btn"
+                                                        onClick={() => salvarNaBibliotecaCele(cele.idElenco)}>
                                                         <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
                                                     </button>
                                                 </div>
                                                 <div style={{ display: cele.marcado === false ? 'none' : '' }}>
-                                                    <button className="icon-btn">
+                                                    <button className="icon-btn"
+                                                        onClick={() => removerNaBibliotecaCele(cele.idElenco)}>
                                                         <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
                                                     </button>
                                                 </div>
@@ -564,6 +847,7 @@ function DetalheCeleDireREVISU() {
                                             <button
                                                 className="icon-btn marcar-btn"
                                                 style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
+                                                onClick={() => salvarNaBibliotecaObra(slide.idObra || slide.id)}
                                             >
                                                 <RiFilmAiLine className="icon" />
                                                 <p style={{ marginLeft: "10px" }}>Marcar</p>
@@ -574,6 +858,7 @@ function DetalheCeleDireREVISU() {
                                             <button
                                                 className="icon-btn desmarcar-btn"
                                                 style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}
+                                                onClick={() => removerNaBibliotecaObra(slide.idObra || slide.id)}
                                             >
                                                 <LuScissorsLineDashed className="icon" />
                                                 <p style={{ marginLeft: "10px" }}>Desmarcar</p>

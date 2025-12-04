@@ -192,7 +192,231 @@ function paravoceREVISU() {
         );
     }
 
-    const generosColorsMap = generoColors;
+    // ========= SALVAR / REMOVER OBRAS =========
+    async function salvarNaBibliotecaObra(idObra) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: idObra,
+                        idElenco: null,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            // marca visualmente a obra como true
+            setObrasParaVoce(prev => ({
+                ...prev,
+                obras: prev.obras.map(o => {
+                    const oid = o.idObra || o.id;
+                    if (oid === idObra) {
+                        return { ...o, marcado: true };
+                    }
+                    return o;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    async function removerNaBibliotecaObra(idObra) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: idObra,
+                        idElenco: null,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setObrasParaVoce(prev => ({
+                ...prev,
+                obras: prev.obras.map(o => {
+                    const oid = o.idObra || o.id;
+                    if (oid === idObra) {
+                        return { ...o, marcado: false };
+                    }
+                    return o;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    // ========= SALVAR / REMOVER CELEBRIDADES =========
+    async function salvarNaBibliotecaCele(idElenco) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: null,
+                        idElenco: idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            setObrasParaVoce(prev => ({
+                ...prev,
+                atores: prev.atores.map(a => {
+                    const aid = a.idElenco || a.id;
+                    if (aid === idElenco) {
+                        return { ...a, marcado: true };
+                    }
+                    return a;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    async function removerNaBibliotecaCele(idElenco) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: null,
+                        idElenco: idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setObrasParaVoce(prev => ({
+                ...prev,
+                atores: prev.atores.map(a => {
+                    const aid = a.idElenco || a.id;
+                    if (aid === idElenco) {
+                        return { ...a, marcado: false };
+                    }
+                    return a;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    // ========= SALVAR / REMOVER DIRETORES =========
+    async function salvarNaBibliotecaDire(idElenco) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: null,
+                        idElenco: idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            setObrasParaVoce(prev => ({
+                ...prev,
+                diretores: prev.diretores.map(d => {
+                    const did = d.idElenco || d.id;
+                    if (did === idElenco) {
+                        return { ...d, marcado: true };
+                    }
+                    return d;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    async function removerNaBibliotecaDire(idElenco) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: usuario,
+                        idObra: null,
+                        idElenco: idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setObrasParaVoce(prev => ({
+                ...prev,
+                diretores: prev.diretores.map(d => {
+                    const did = d.idElenco || d.id;
+                    if (did === idElenco) {
+                        return { ...d, marcado: false };
+                    }
+                    return d;
+                }),
+            }));
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
 
     return (
         <div className="paravoce-container">
@@ -260,6 +484,10 @@ function paravoceREVISU() {
                                                     slide.marcado === true
                                                         ? "0px -10px 12px -4px #4cd815"
                                                         : "0px -10px 12px -4px #9A15D8",
+                                                border:
+                                                    slide.marcado === true
+                                                        ? "2px solid #4cd815"
+                                                        : "2px solid #9a15d8",
                                             }}
                                         >
                                             <div>
@@ -291,6 +519,7 @@ function paravoceREVISU() {
                                                     <button
                                                         className="icon-btn marcar-btn"
                                                         style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
+                                                        onClick={() => salvarNaBibliotecaObra(slide.idObra || slide.id)}
                                                     >
                                                         <RiFilmAiLine className="icon" />
                                                         <p style={{ marginLeft: "10px" }}>Marcar</p>
@@ -303,6 +532,7 @@ function paravoceREVISU() {
                                                     <button
                                                         className="icon-btn desmarcar-btn"
                                                         style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}
+                                                        onClick={() => removerNaBibliotecaObra(slide.idObra || slide.id)}
                                                     >
                                                         <LuScissorsLineDashed className="icon" />
                                                         <p style={{ marginLeft: "10px" }}>Desmarcar</p>
@@ -406,7 +636,8 @@ function paravoceREVISU() {
 
                                         <div style={{ marginTop: "10%" }}>
                                             <div style={{ display: cele.marcado === true ? "none" : "" }}>
-                                                <button className="icon-btn">
+                                                <button className="icon-btn"
+                                                    onClick={() => salvarNaBibliotecaCele(cele.idElenco || cele.id)}>
                                                     <BsFillPersonCheckFill
                                                         className="icon"
                                                         style={{ color: "#4cd815" }}
@@ -414,7 +645,8 @@ function paravoceREVISU() {
                                                 </button>
                                             </div>
                                             <div style={{ display: cele.marcado === false ? "none" : "" }}>
-                                                <button className="icon-btn">
+                                                <button className="icon-btn"
+                                                    onClick={() => removerNaBibliotecaCele(cele.idElenco || cele.id)}>
                                                     <BsFillPersonDashFill
                                                         className="icon"
                                                         style={{ color: "#9A15D8" }}
@@ -463,6 +695,10 @@ function paravoceREVISU() {
                                             dire.marcado === true
                                                 ? "-8px 0 12px -2px #4cd815"
                                                 : "-8px 0 12px -2px #9A15D8",
+                                        border:
+                                            dire.marcado === true
+                                                ? "2px solid #4cd815"
+                                                : "2px solid #9a15d8",
                                     }}
                                 >
                                     <div className="foto-wrapper" style={{ width: "15%" }}>
@@ -506,7 +742,8 @@ function paravoceREVISU() {
 
                                         <div style={{ marginTop: "10%" }}>
                                             <div style={{ display: dire.marcado === true ? "none" : "" }}>
-                                                <button className="icon-btn">
+                                                <button className="icon-btn"
+                                                    onClick={() => salvarNaBibliotecaDire(dire.idElenco || dire.id)}>
                                                     <BsFillPersonCheckFill
                                                         className="icon"
                                                         style={{ color: "#4cd815" }}
@@ -514,7 +751,8 @@ function paravoceREVISU() {
                                                 </button>
                                             </div>
                                             <div style={{ display: dire.marcado === false ? "none" : "" }}>
-                                                <button className="icon-btn">
+                                                <button className="icon-btn"
+                                                    onClick={() => removerNaBibliotecaDire(dire.idElenco || dire.id)}>
                                                     <BsFillPersonDashFill
                                                         className="icon"
                                                         style={{ color: "#9A15D8" }}

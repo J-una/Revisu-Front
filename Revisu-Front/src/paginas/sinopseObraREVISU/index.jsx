@@ -20,6 +20,7 @@ function sinopseObraREVISU() {
     const [loading, setLoading] = useState(true);
 
     const [sinopsesObra, setSinopsesObra] = useState({
+        idObra: "",
         titulo: "",
         sinopse: "",
         imagem: "",
@@ -55,6 +56,7 @@ function sinopseObraREVISU() {
                 const dados = await resp.json();
 
                 setSinopsesObra({
+                    idObra: dados.idObra || dados.id,
                     titulo: dados.titulo,
                     sinopse: dados.sinopse,
                     imagem: dados.imagem,
@@ -114,7 +116,6 @@ function sinopseObraREVISU() {
     }
 
     const visibleCount4 = 4;
-    const visibleCount2 = 2;
     const stepCele = 2;
 
     function nextSlideObra() {
@@ -164,7 +165,157 @@ function sinopseObraREVISU() {
     if (!sinopsesObra) {
         return <h2>Obra não encontrada.</h2>;
     }
+    async function salvarNaBibliotecaObra(idObra) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: idUsuario,
+                        idObra: idObra,
+                        idElenco: null,
+                    }),
+                }
+            );
 
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            setSinopsesObra(prev => ({
+                ...prev,
+                marcado: true,
+            }));
+
+            setSlideObra(prev =>
+                prev.map(o => {
+                    const oid = o.idObra || o.id;
+                    if (oid === idObra) {
+                        return { ...o, marcado: true };
+                    }
+                    return o;
+                })
+            );
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+
+    async function salvarNaBibliotecaCele(idElenco) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: idUsuario,
+                        idObra: null,
+                        idElenco: idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao salvar na biblioteca");
+            }
+
+            setSlidesCelebridades(prev =>
+                prev.map(a => {
+                    const aid = a.idElenco || a.id;
+                    if (aid === idElenco) {
+                        return { ...a, marcado: true };
+                    }
+                    return a;
+                })
+            );
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+    async function removerNaBibliotecaObra(idObra) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: idUsuario,
+                        idObra: idObra,
+                        idElenco: null,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setSinopsesObra(prev => ({
+                ...prev,
+                marcado: false,
+            }));
+
+            setSlideObra(prev =>
+                prev.map(o => {
+                    const oid = o.idObra || o.id;
+                    if (oid === idObra) {
+                        return { ...o, marcado: false };
+                    }
+                    return o;
+                })
+            );
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
+    async function removerNaBibliotecaCele(idElenco) {
+        try {
+            const response = await fetch(
+                "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                    body: JSON.stringify({
+                        idUsuario: idUsuario,
+                        idObra: null,
+                        idElenco: idElenco,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao remover da biblioteca");
+            }
+
+            setSlidesCelebridades(prev =>
+                prev.map(a => {
+                    const aid = a.idElenco || a.id;
+                    if (aid === idElenco) {
+                        return { ...a, marcado: false };
+                    }
+                    return a;
+                })
+            );
+        } catch (erro) {
+            console.error("ERRO AO ENVIAR POST:", erro);
+        }
+    }
     return (
         <div className="sinopse-container">
             <div>
@@ -220,6 +371,7 @@ function sinopseObraREVISU() {
                                         <button
                                             className="marcar-toggle desmarcar-btn"
                                             style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}
+                                            onClick={() => removerNaBibliotecaObra(sinopsesObra.idObra || sinopsesObra.id)}
                                         >
                                             <LuScissorsLineDashed className="icon" />
                                             <p style={{ marginLeft: "10px" }}>Desmarcar</p>
@@ -228,6 +380,7 @@ function sinopseObraREVISU() {
                                         <button
                                             className="marcar-toggle marcar-btn"
                                             style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
+                                            onClick={() => salvarNaBibliotecaObra(sinopsesObra.idObra || sinopsesObra.id)}
                                         >
                                             <RiFilmAiLine className="icon" />
                                             <p style={{ marginLeft: "10px" }}>Marcar</p>
@@ -363,7 +516,8 @@ function sinopseObraREVISU() {
 
                                                 <div style={{ marginTop: "10%" }}>
                                                     <div style={{ display: cele.marcado === true ? "none" : "" }}>
-                                                        <button className="icon-btn">
+                                                        <button className="icon-btn"
+                                                            onClick={() => salvarNaBibliotecaCele(cele.idElenco)}>
                                                             <BsFillPersonCheckFill
                                                                 className="icon"
                                                                 style={{ color: "#4cd815" }}
@@ -371,7 +525,8 @@ function sinopseObraREVISU() {
                                                         </button>
                                                     </div>
                                                     <div style={{ display: cele.marcado === false ? "none" : "" }}>
-                                                        <button className="icon-btn">
+                                                        <button className="icon-btn"
+                                                            onClick={() => removerNaBibliotecaCele(cele.idElenco)}>
                                                             <BsFillPersonDashFill
                                                                 className="icon"
                                                                 style={{ color: "#9A15D8" }}
@@ -456,6 +611,7 @@ function sinopseObraREVISU() {
                                             <button
                                                 className="icon-btn marcar-btn"
                                                 style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
+                                                onClick={() => salvarNaBibliotecaObra(slide.idObra || slide.id)}
                                             >
                                                 <RiFilmAiLine className="icon" />
                                                 <p style={{ marginLeft: "10px" }}>Marcar</p>
@@ -466,6 +622,7 @@ function sinopseObraREVISU() {
                                             <button
                                                 className="icon-btn desmarcar-btn"
                                                 style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}
+                                                onClick={() => removerNaBibliotecaObra(slide.idObra || slide.id)}
                                             >
                                                 <LuScissorsLineDashed className="icon" />
                                                 <p style={{ marginLeft: "10px" }}>Desmarcar</p>

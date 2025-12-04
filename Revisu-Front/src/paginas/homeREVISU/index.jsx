@@ -84,7 +84,7 @@ e um catálogo organizado do seu jeito.`,
         setLoading(true); // começa carregando
 
         const resp = await fetch(
-          "https://localhost:44348/api/Recomendacao/listar-populares"
+          `https://localhost:44348/api/Recomendacao/listar-populares${usuario ? `?idUsuario=${usuario}` : ""}`
         );
 
         const data = await resp.json();
@@ -195,6 +195,223 @@ e um catálogo organizado do seu jeito.`,
     return () => clearInterval(interval);
   }, []);
 
+  async function salvarNaBibliotecaObra(idObra) {
+    try {
+      const response = await fetch(
+        "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "*/*",
+          },
+          body: JSON.stringify({
+            idUsuario: usuario,
+            idObra: idObra,
+            idElenco: null,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao salvar na biblioteca");
+      }
+
+      setPopulares(prev => ({
+        ...prev,
+        obras: prev.obras.map(o => {
+          const oid = o.idObra || o.id;
+          if (oid === idObra) {
+            return { ...o, marcado: true };
+          }
+          return o;
+        }),
+      }));
+    } catch (erro) {
+      console.error("ERRO AO ENVIAR POST:", erro);
+    }
+  }
+
+  async function salvarNaBibliotecaCele(idElenco) {
+    try {
+      const response = await fetch(
+        "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "*/*",
+          },
+          body: JSON.stringify({
+            idUsuario: usuario,
+            idObra: null,
+            idElenco: idElenco,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao salvar na biblioteca");
+      }
+
+      setPopulares(prev => ({
+        ...prev,
+        atores: prev.atores.map(o => {
+          const oid = o.idElenco || o.id;
+          if (oid === idElenco) {
+            return { ...o, marcado: true };
+          }
+          return o;
+        }),
+      }));
+    } catch (erro) {
+      console.error("ERRO AO ENVIAR POST:", erro);
+    }
+  }
+  async function salvarNaBibliotecaDire(idElenco) {
+    try {
+      const response = await fetch(
+        "https://localhost:44348/api/Recomendacao/Salvar-Biblioteca",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "*/*",
+          },
+          body: JSON.stringify({
+            idUsuario: usuario,
+            idObra: null,
+            idElenco: idElenco,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao salvar na biblioteca");
+      }
+
+      setPopulares(prev => ({
+        ...prev,
+        diretores: prev.diretores.map(o => {
+          const oid = o.idElenco || o.id;
+          if (oid === idElenco) {
+            return { ...o, marcado: true };
+          }
+          return o;
+        }),
+      }));
+    } catch (erro) {
+      console.error("ERRO AO ENVIAR POST:", erro);
+    }
+  }
+  async function removerNaBibliotecaObra(idObra) {
+    try {
+      const response = await fetch(
+        "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "*/*",
+          },
+          body: JSON.stringify({
+            idUsuario: usuario,
+            idObra: idObra,
+            idElenco: null,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao remover da biblioteca");
+      }
+
+      setPopulares(prev => ({
+        ...prev,
+        obras: prev.obras.map(o => {
+          const oid = o.idObra || o.id;
+          if (oid === idObra) {
+            return { ...o, marcado: false };
+          }
+          return o;
+        }),
+      }));
+    } catch (erro) {
+      console.error("ERRO AO ENVIAR POST:", erro);
+    }
+  }
+  async function removerNaBibliotecaCele(idElenco) {
+    try {
+      const response = await fetch(
+        "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "*/*",
+          },
+          body: JSON.stringify({
+            idUsuario: usuario,
+            idObra: null,
+            idElenco: idElenco,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao remover da biblioteca");
+      }
+
+      setPopulares(prev => ({
+        ...prev,
+        atores: prev.atores.map(o => {
+          const oid = o.idElenco || o.id;
+          if (oid === idElenco) {
+            return { ...o, marcado: false };
+          }
+          return o;
+        }),
+      }));
+    } catch (erro) {
+      console.error("ERRO AO ENVIAR POST:", erro);
+    }
+  }
+  async function removerNaBibliotecaDire(idElenco) {
+    try {
+      const response = await fetch(
+        "https://localhost:44348/api/Recomendacao/Remover-Biblioteca",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "*/*",
+          },
+          body: JSON.stringify({
+            idUsuario: usuario,
+            idObra: null,
+            idElenco: idElenco,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao remover da biblioteca");
+      }
+
+      setPopulares(prev => ({
+        ...prev,
+        diretores: prev.diretores.map(o => {
+          const oid = o.idElenco || o.id;
+          if (oid === idElenco) {
+            return { ...o, marcado: false };
+          }
+          return o;
+        }),
+      }));
+    } catch (erro) {
+      console.error("ERRO AO ENVIAR POST:", erro);
+    }
+  }
   return (
     <div className="home-container">
       <div>
@@ -301,6 +518,7 @@ e um catálogo organizado do seu jeito.`,
                       <button
                         className="icon-btn marcar-btn"
                         style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
+                        onClick={() => salvarNaBibliotecaObra(slide.idObra || slide.id)}
                       >
                         <RiFilmAiLine className="icon" />
                         <p style={{ marginLeft: "10px" }}>Marcar</p>
@@ -311,6 +529,7 @@ e um catálogo organizado do seu jeito.`,
                       <button
                         className="icon-btn desmarcar-btn"
                         style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}
+                        onClick={() => removerNaBibliotecaObra(slide.idObra || slide.id)}
                       >
                         <LuScissorsLineDashed className="icon" />
                         <p style={{ marginLeft: "10px" }}>Desmarcar</p>
@@ -410,7 +629,8 @@ e um catálogo organizado do seu jeito.`,
 
                     <div style={{ marginTop: "10%" }}>
                       <div style={{ display: cele.marcado === true ? "none" : "" }}>
-                        <button className="icon-btn">
+                        <button className="icon-btn"
+                          onClick={() => salvarNaBibliotecaCele(cele.idElenco)}>
                           <BsFillPersonCheckFill
                             className="icon"
                             style={{ color: "#4cd815" }}
@@ -418,7 +638,8 @@ e um catálogo organizado do seu jeito.`,
                         </button>
                       </div>
                       <div style={{ display: cele.marcado === false ? "none" : "" }}>
-                        <button className="icon-btn">
+                        <button className="icon-btn"
+                          onClick={() => removerNaBibliotecaCele(cele.idElenco)}>
                           <BsFillPersonDashFill
                             className="icon"
                             style={{ color: "#9A15D8" }}
@@ -513,7 +734,8 @@ e um catálogo organizado do seu jeito.`,
 
                     <div style={{ marginTop: "10%" }}>
                       <div style={{ display: dire.marcado === true ? "none" : "" }}>
-                        <button className="icon-btn">
+                        <button className="icon-btn"
+                          onClick={() => salvarNaBibliotecaDire(dire.idElenco)}>
                           <BsFillPersonCheckFill
                             className="icon"
                             style={{ color: "#4cd815" }}
@@ -521,7 +743,8 @@ e um catálogo organizado do seu jeito.`,
                         </button>
                       </div>
                       <div style={{ display: dire.marcado === false ? "none" : "" }}>
-                        <button className="icon-btn">
+                        <button className="icon-btn"
+                          onClick={() => removerNaBibliotecaDire(dire.idElenco)}>
                           <BsFillPersonDashFill
                             className="icon"
                             style={{ color: "#9A15D8" }}
