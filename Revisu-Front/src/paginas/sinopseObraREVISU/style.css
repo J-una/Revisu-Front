@@ -233,3 +233,55 @@
     padding: 20px 0;
     font-weight: bold;
 }
+
+ /* Modal sucesso/erro*/
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-box {
+    width: 350px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-box.success {
+    border-top: 5px solid #4CAF50;
+}
+.modal-box.error {
+    border-top: 5px solid #e53935;
+}
+
+.modal-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #222;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Borda erro input */
+.input-error {
+    border: 2px solid #ff4d4d !important;
+    background-color: #ffeaea;
+    transition: 0.2s;
+}
