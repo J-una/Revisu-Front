@@ -15,7 +15,6 @@ function DetalheCeleDireREVISU() {
     const { idElenco, idUsuario } = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
-    const [marcado, setMarcado] = useState(true);
 
     const [detalheCeleDire, setDetalheCeleDire] = useState({
         biografia: "",
@@ -24,7 +23,7 @@ function DetalheCeleDireREVISU() {
         sexo: "",
         nome: "",
         foto: "",
-        marcado: null,
+        marcado: "",
     });
 
     const [relacionados, setRelacionados] = useState({
@@ -220,7 +219,7 @@ function DetalheCeleDireREVISU() {
                     {/* COLUNA ESQUERDA */}
                     <div className="detalheCeleDire-left">
                         <div className="poster-card" style={{
-                            boxShadow: marcado ? '0px -10px 12px -4px #9A15D8' : '0px -10px 12px -4px #4cd815'
+                            boxShadow: detalheCeleDire.marcado === false ? '0px -10px 12px -4px #9A15D8' : '0px -10px 12px -4px #4cd815'
                         }}>
                             <div>
                                 {detalheCeleDire.foto ? (
@@ -264,10 +263,9 @@ function DetalheCeleDireREVISU() {
                             <div className="poster-info">
                                 {/* botão marcar/desmarcar */}
                                 <div className="poster-button">
-                                    {marcado ? (
+                                    {detalheCeleDire.marcado === false ? (
                                         <button
                                             className="marcar-toggle marcar-btn"
-                                            onClick={() => setMarcado(false)}
                                             style={{ boxShadow: '1px 1px 10px 1px #4cd815' }}
                                         >
                                             <RiFilmAiLine className="icon" />
@@ -276,7 +274,6 @@ function DetalheCeleDireREVISU() {
                                     ) : (
                                         <button
                                             className="marcar-toggle desmarcar-btn"
-                                            onClick={() => setMarcado(true)}
                                             style={{ boxShadow: '1px 1px 10px 1px #9A15D8' }}
                                         >
                                             <LuScissorsLineDashed className="icon" />
@@ -345,11 +342,11 @@ function DetalheCeleDireREVISU() {
                                         key={dire._i}
                                         style={{
                                             boxShadow:
-                                                marcado === true
+                                                dire.marcado === true
                                                     ? "0px -10px 12px -4px #4cd815"
                                                     : "0px -10px 12px -4px #9A15D8",
                                             border:
-                                                marcado === true
+                                                dire.marcado === true
                                                     ? "2px solid #4cd815"
                                                     : "2px solid #9a15d8",
                                         }}
@@ -397,7 +394,7 @@ function DetalheCeleDireREVISU() {
                                             </button>
 
                                             <div style={{ marginTop: "10%" }}>
-                                                <div style={{ display: marcado === true ? "none" : "" }}>
+                                                <div style={{ display: dire.marcado === true ? "none" : "" }}>
                                                     <button className="icon-btn">
                                                         <BsFillPersonCheckFill
                                                             className="icon"
@@ -405,7 +402,7 @@ function DetalheCeleDireREVISU() {
                                                         />
                                                     </button>
                                                 </div>
-                                                <div style={{ display: marcado !== true ? "none" : "" }}>
+                                                <div style={{ display: dire.marcado === false ? "none" : " " }}>
                                                     <button className="icon-btn">
                                                         <BsFillPersonDashFill
                                                             className="icon"
@@ -440,7 +437,7 @@ function DetalheCeleDireREVISU() {
 
                             <div className="slides-grid-celeDesta">
                                 {celeVisiveis.map((cele) => (
-                                    <div className="card-celeDesta" key={cele._i} style={{ boxShadow: marcado != true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
+                                    <div className="card-celeDesta" key={cele._i} style={{ boxShadow: cele.marcado === true ? '-8px 0 12px -2px #4cd815' : '-8px 0 12px -2px #9A15D8' }}>
 
                                         <div className="foto-wrapper">
                                             {cele.foto ? (
@@ -482,12 +479,12 @@ function DetalheCeleDireREVISU() {
                                             </button>
 
                                             <div style={{ marginTop: '10%' }}>
-                                                <div style={{ display: marcado === true ? '' : 'none' }}>
+                                                <div style={{ display: cele.marcado === true ? 'none' : '' }}>
                                                     <button className="icon-btn">
                                                         <BsFillPersonCheckFill className="icon" style={{ color: '#4cd815' }} />
                                                     </button>
                                                 </div>
-                                                <div style={{ display: marcado != true ? '' : 'none' }}>
+                                                <div style={{ display: cele.marcado === false ? 'none' : '' }}>
                                                     <button className="icon-btn">
                                                         <BsFillPersonDashFill className="icon" style={{ color: '#9A15D8' }} />
                                                     </button>
@@ -526,11 +523,11 @@ function DetalheCeleDireREVISU() {
                                     key={slide._i}
                                     style={{
                                         boxShadow:
-                                            marcado === true
+                                            slide.marcado === true
                                                 ? "0px -10px 12px -4px #4cd815"
                                                 : "0px -10px 12px -4px #9A15D8",
                                         border:
-                                            marcado === true
+                                            slide.marcado === true
                                                 ? "2px solid #4cd815"
                                                 : "2px solid #9a15d8",
                                     }}
@@ -563,7 +560,7 @@ function DetalheCeleDireREVISU() {
                                             <p style={{ marginLeft: "10px" }}>Sinopse</p>
                                         </button>
 
-                                        <div style={{ display: marcado === true ? "none" : "" }}>
+                                        <div style={{ display: slide.marcado === true ? "none" : "" }}>
                                             <button
                                                 className="icon-btn marcar-btn"
                                                 style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
@@ -573,7 +570,7 @@ function DetalheCeleDireREVISU() {
                                             </button>
                                         </div>
 
-                                        <div style={{ display: marcado !== true ? "none" : "" }}>
+                                        <div style={{ display: slide.marcado === false ? "none" : "" }}>
                                             <button
                                                 className="icon-btn desmarcar-btn"
                                                 style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}

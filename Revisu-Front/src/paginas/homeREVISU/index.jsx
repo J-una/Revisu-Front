@@ -27,15 +27,14 @@ function HomeREVISU() {
   });
 
   const [loading, setLoading] = useState(true);
-  const [marcado, setMarcado] = useState(false);
   const [usuario, setUsuario] = useState(() => {
     const usuarioSession = sessionStorage.getItem("usuario");
     if (usuarioSession) {
-        const data = JSON.parse(usuarioSession);
-        return data.idUsuario; // pega somente o GUID do usuário
+      const data = JSON.parse(usuarioSession);
+      return data.idUsuario; // pega somente o GUID do usuário
     }
     return ""; // valor padrão se não houver ninguém logado
-    });
+  });
   const navigate = useNavigate();
 
   function arredondarNota(nota) {
@@ -261,11 +260,11 @@ e um catálogo organizado do seu jeito.`,
                   key={slide._i}
                   style={{
                     boxShadow:
-                      marcado === true
+                      slide.marcado === true
                         ? "0px -10px 12px -4px #4cd815"
                         : "0px -10px 12px -4px #9A15D8",
                     border:
-                      marcado === true
+                      slide.marcado === true
                         ? "2px solid #4cd815"
                         : "2px solid #9a15d8",
                   }}
@@ -298,7 +297,7 @@ e um catálogo organizado do seu jeito.`,
                       <p style={{ marginLeft: "10px" }}>Sinopse</p>
                     </button>
 
-                    <div style={{ display: marcado === true ? "none" : "" }}>
+                    <div style={{ display: slide.marcado === true ? "none" : "" }}>
                       <button
                         className="icon-btn marcar-btn"
                         style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
@@ -308,7 +307,7 @@ e um catálogo organizado do seu jeito.`,
                       </button>
                     </div>
 
-                    <div style={{ display: marcado !== true ? "none" : "" }}>
+                    <div style={{ display: slide.marcado === false ? "none" : "" }}>
                       <button
                         className="icon-btn desmarcar-btn"
                         style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}
@@ -358,11 +357,11 @@ e um catálogo organizado do seu jeito.`,
                   key={cele._i}
                   style={{
                     boxShadow:
-                      marcado === true
+                      cele.marcado === true
                         ? "0px -10px 12px -4px #4cd815"
                         : "0px -10px 12px -4px #9A15D8",
                     border:
-                      marcado === true
+                      cele.marcado === true
                         ? "2px solid #4cd815"
                         : "2px solid #9a15d8",
                   }}
@@ -410,7 +409,7 @@ e um catálogo organizado do seu jeito.`,
                     </button>
 
                     <div style={{ marginTop: "10%" }}>
-                      <div style={{ display: marcado === true ? "none" : "" }}>
+                      <div style={{ display: cele.marcado === true ? "none" : "" }}>
                         <button className="icon-btn">
                           <BsFillPersonCheckFill
                             className="icon"
@@ -418,7 +417,7 @@ e um catálogo organizado do seu jeito.`,
                           />
                         </button>
                       </div>
-                      <div style={{ display: marcado !== true ? "none" : "" }}>
+                      <div style={{ display: cele.marcado === false ? "none" : "" }}>
                         <button className="icon-btn">
                           <BsFillPersonDashFill
                             className="icon"
@@ -461,11 +460,11 @@ e um catálogo organizado do seu jeito.`,
                   key={dire._i}
                   style={{
                     boxShadow:
-                      marcado === true
+                      dire.marcado === true
                         ? "0px -10px 12px -4px #4cd815"
                         : "0px -10px 12px -4px #9A15D8",
                     border:
-                      marcado === true
+                      dire.marcado === true
                         ? "2px solid #4cd815"
                         : "2px solid #9a15d8",
                   }}
@@ -513,7 +512,7 @@ e um catálogo organizado do seu jeito.`,
                     </button>
 
                     <div style={{ marginTop: "10%" }}>
-                      <div style={{ display: marcado === true ? "none" : "" }}>
+                      <div style={{ display: dire.marcado === true ? "none" : "" }}>
                         <button className="icon-btn">
                           <BsFillPersonCheckFill
                             className="icon"
@@ -521,7 +520,7 @@ e um catálogo organizado do seu jeito.`,
                           />
                         </button>
                       </div>
-                      <div style={{ display: marcado !== true ? "none" : "" }}>
+                      <div style={{ display: dire.marcado === false ? "none" : "" }}>
                         <button className="icon-btn">
                           <BsFillPersonDashFill
                             className="icon"

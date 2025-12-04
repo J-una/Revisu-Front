@@ -17,8 +17,6 @@ import { useNavigate, useParams } from "react-router-dom";
 function sinopseObraREVISU() {
     const { idObra, idUsuario } = useParams();
     const navigate = useNavigate();
-
-    const [marcado, setMarcado] = useState(true);
     const [loading, setLoading] = useState(true);
 
     const [sinopsesObra, setSinopsesObra] = useState({
@@ -191,7 +189,7 @@ function sinopseObraREVISU() {
                             className="poster-card"
                             style={{
                                 boxShadow:
-                                    marcado === true
+                                    sinopsesObra.marcado === true
                                         ? "0px -10px 12px -4px #4cd815"
                                         : "0px -10px 12px -4px #9A15D8",
                             }}
@@ -218,10 +216,9 @@ function sinopseObraREVISU() {
                                 </p>
 
                                 <div className="poster-button">
-                                    {marcado === true ? (
+                                    {sinopsesObra.marcado === true ? (
                                         <button
                                             className="marcar-toggle desmarcar-btn"
-                                            onClick={() => setMarcado(false)}
                                             style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}
                                         >
                                             <LuScissorsLineDashed className="icon" />
@@ -230,7 +227,6 @@ function sinopseObraREVISU() {
                                     ) : (
                                         <button
                                             className="marcar-toggle marcar-btn"
-                                            onClick={() => setMarcado(true)}
                                             style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
                                         >
                                             <RiFilmAiLine className="icon" />
@@ -314,11 +310,11 @@ function sinopseObraREVISU() {
                                             key={cele._i}
                                             style={{
                                                 boxShadow:
-                                                    marcado === true
+                                                    cele.marcado === true
                                                         ? "0px -10px 12px -4px #4cd815"
                                                         : "0px -10px 12px -4px #9A15D8",
                                                 border:
-                                                    marcado === true
+                                                    cele.marcado === true
                                                         ? "2px solid #4cd815"
                                                         : "2px solid #9a15d8",
                                             }}
@@ -366,7 +362,7 @@ function sinopseObraREVISU() {
                                                 </button>
 
                                                 <div style={{ marginTop: "10%" }}>
-                                                    <div style={{ display: marcado === true ? "none" : "" }}>
+                                                    <div style={{ display: cele.marcado === true ? "none" : "" }}>
                                                         <button className="icon-btn">
                                                             <BsFillPersonCheckFill
                                                                 className="icon"
@@ -374,7 +370,7 @@ function sinopseObraREVISU() {
                                                             />
                                                         </button>
                                                     </div>
-                                                    <div style={{ display: marcado !== true ? "none" : "" }}>
+                                                    <div style={{ display: cele.marcado === false ? "none" : "" }}>
                                                         <button className="icon-btn">
                                                             <BsFillPersonDashFill
                                                                 className="icon"
@@ -419,11 +415,11 @@ function sinopseObraREVISU() {
                                     key={slide._i}
                                     style={{
                                         boxShadow:
-                                            marcado === true
+                                            slide.marcado === true
                                                 ? "0px -10px 12px -4px #4cd815"
                                                 : "0px -10px 12px -4px #9A15D8",
                                         border:
-                                            marcado === true
+                                            slide.marcado === true
                                                 ? "2px solid #4cd815"
                                                 : "2px solid #9a15d8",
                                     }}
@@ -456,7 +452,7 @@ function sinopseObraREVISU() {
                                             <p style={{ marginLeft: "10px" }}>Sinopse</p>
                                         </button>
 
-                                        <div style={{ display: marcado === true ? "none" : "" }}>
+                                        <div style={{ display: slide.marcado === true ? "none" : "" }}>
                                             <button
                                                 className="icon-btn marcar-btn"
                                                 style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
@@ -466,7 +462,7 @@ function sinopseObraREVISU() {
                                             </button>
                                         </div>
 
-                                        <div style={{ display: marcado !== true ? "none" : "" }}>
+                                        <div style={{ display: slide.marcado === false ? "none" : "" }}>
                                             <button
                                                 className="icon-btn desmarcar-btn"
                                                 style={{ boxShadow: "1px 1px 10px 1px #9A15D8" }}

@@ -1,4 +1,5 @@
 import Toolbar from "./toolbar";
+import Footer from "./footer";
 import { Outlet } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
@@ -12,6 +13,7 @@ function Layout() {
         <>
             <Toolbar logado={logado} />
             <Outlet />
+            <Footer logado={logado} />
         </>
     );
 }

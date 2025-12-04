@@ -18,7 +18,7 @@ function LoginREVISU() {
         setErro("");
 
         try {
-            const response = await fetch("https://localhost:7290/api/usuarios/login", { 
+            const response = await fetch("https://localhost:44348/api/usuarios/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, senha })

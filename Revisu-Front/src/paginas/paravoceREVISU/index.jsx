@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { LuScissorsLineDashed } from "react-icons/lu";
 import { RiFilmAiLine } from "react-icons/ri";
-import { PiFilmReel } from "react-icons/pi";
+import { PiFilmReel, PiFilmSlateBold } from "react-icons/pi";
 import { FaStar } from "react-icons/fa";
 import { CiImageOff } from "react-icons/ci";
 import {
@@ -10,9 +10,6 @@ import {
     BsPersonBoundingBox,
 } from "react-icons/bs";
 import "./style.css";
-import { slideObra } from "../../dados/slideObra.js";
-import { slideCelebridade } from "../../dados/slideCelebridades.js";
-import { slideDiretore } from "../../dados/slideDiretor.js";
 import { generoColors } from "../../dados/generoColors.js";
 import { useNavigate } from "react-router-dom";
 
@@ -22,21 +19,6 @@ function getTopGenresFromObras(obras, limit) {
 
     obras.forEach((obra) => {
         obra.generos?.forEach((g) => {
-            counts[g] = (counts[g] || 0) + 1;
-        });
-    });
-
-    return Object.entries(counts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, limit)
-        .map(([genre]) => genre);
-}
-
-function getTopGenresFromCelebs(celebs, limit) {
-    const counts = {};
-
-    celebs.forEach((c) => {
-        c.generos?.forEach((g) => {
             counts[g] = (counts[g] || 0) + 1;
         });
     });
@@ -62,10 +44,6 @@ function getVisibleSlides(list, startIndex, visibleCount) {
 }
 
 function paravoceREVISU() {
-    const [slidesObra] = useState(slideObra);
-    const [slidesCelebridades] = useState(slideCelebridade);
-    const [slidesDiretores] = useState(slideDiretore);
-    const [marcado, setMarcado] = useState(true);
     const navigate = useNavigate();
 
     const visibleCountObra = 4;
@@ -74,8 +52,56 @@ function paravoceREVISU() {
 
     // índices por gênero (obras e celebridades)
     const [indexObrasPorGenero, setIndexObrasPorGenero] = useState({});
-    const [indexCelebridadesPorGenero, setIndexCelebridadesPorGenero] = useState({});
+    const [indexCarroselCele, setIndexCarroselCele] = useState(0);
     const [indexCarroselDire, setIndexCarroselDire] = useState(0);
+
+    const [obrasParaVoce, setObrasParaVoce] = useState({
+        obras: [],
+        atores: [],
+        diretores: [],
+    });
+    const [usuario, setUsuario] = useState(() => {
+        const usuarioSession = sessionStorage.getItem("usuario");
+        if (usuarioSession) {
+            const data = JSON.parse(usuarioSession);
+            return data.idUsuario; // pega somente o GUID do usuário
+        }
+        return ""; // valor padrão se não houver ninguém logado
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function carregarParaVoce() {
+            try {
+                setLoading(true); // começa carregando
+
+                const resp = await fetch(
+                    `https://localhost:44348/api/Recommendation/recommend/${usuario}`
+                );
+
+                const data = await resp.json();
+
+                // se vier array, pega o primeiro; se vier objeto direto, usa ele
+                const payload = Array.isArray(data) ? data[0] ?? {} : data ?? {};
+
+                setObrasParaVoce({
+                    obras: payload.obras ?? [],
+                    atores: payload.atores ?? [],
+                    diretores: payload.diretores ?? [],
+                });
+            } catch (e) {
+                console.error("Erro ao buscar conteúdos para voce:", e);
+            } finally {
+                setLoading(false); // termina carregamento
+            }
+        }
+
+        carregarParaVoce();
+    }, []);
+
+    const slidesObra = obrasParaVoce.obras || [];
+    const slidesCelebridades = obrasParaVoce.atores || [];
+    const slidesDiretores = obrasParaVoce.diretores || [];
 
     // Top 5 gêneros de obras
     const topObraGenres = useMemo(
@@ -83,11 +109,29 @@ function paravoceREVISU() {
         [slidesObra]
     );
 
-    // Top 3 gêneros de celebridades
-    const topCeleGenres = useMemo(
-        () => getTopGenresFromCelebs(slidesCelebridades, 2),
-        [slidesCelebridades]
-    );
+    const visibleCount4 = 4;
+    const stepCele = 2;
+
+    function nextSlideCele() {
+        const total = slidesCelebridades.length;
+        if (!total) return;
+        setIndexCarroselCele((prev) => (prev + stepCele) % total);
+    }
+
+    function prevSlideCele() {
+        const total = slidesCelebridades.length;
+        if (!total) return;
+        setIndexCarroselCele((prev) => (prev - stepCele + total) % total);
+    }
+
+    function getVisibleSlidesCelebridades() {
+        if (!slidesCelebridades.length) return [];
+        const qtd = Math.min(visibleCount4, slidesCelebridades.length);
+        return Array.from({ length: qtd }, (_, i) => {
+            const slideIndex = (indexCarroselCele + i) % slidesCelebridades.length;
+            return { ...slidesCelebridades[slideIndex], _i: slideIndex };
+        });
+    }
 
     function arredondarNota(nota) {
         if (nota == null) return "-";
@@ -129,34 +173,6 @@ function paravoceREVISU() {
         });
     }
 
-
-    function nextSlideCeleGenero(genero) {
-        const celebsDoGenero = slidesCelebridades.filter((c) =>
-            c.generos?.includes(genero)
-        );
-        if (!celebsDoGenero.length) return;
-
-        setIndexCelebridadesPorGenero((prev) => {
-            const atual = prev[genero] || 0;
-            return { ...prev, [genero]: (atual + 1) % celebsDoGenero.length };
-        });
-    }
-
-    function prevSlideCeleGenero(genero) {
-        const celebsDoGenero = slidesCelebridades.filter((c) =>
-            c.generos?.includes(genero)
-        );
-        if (!celebsDoGenero.length) return;
-
-        setIndexCelebridadesPorGenero((prev) => {
-            const atual = prev[genero] || 0;
-            return {
-                ...prev,
-                [genero]: (atual - 1 + celebsDoGenero.length) % celebsDoGenero.length,
-            };
-        });
-    }
-
     // Diretores (mantido como estava, 1 carrossel)
     function nextSlideCele() {
         setIndexCarroselCele((prev) => (prev + stepCele) % slidesCelebridades.length);
@@ -183,6 +199,17 @@ function paravoceREVISU() {
             <div>
                 <h1>-</h1>
             </div>
+
+            {/* OVERLAY DE CARREGAMENTO */}
+            {loading && (
+                <div className="home-loading-overlay">
+                    <div className="home-loading-inner">
+                        <PiFilmSlateBold className="home-loading-icon" />
+                        <p className="home-loading-text">Carregando Recomendações...</p>
+                    </div>
+                </div>
+            )}
+
             <div className="paravoce-content">
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <div className="tituloParaVoce">
@@ -230,7 +257,7 @@ function paravoceREVISU() {
                                             key={slide._i}
                                             style={{
                                                 boxShadow:
-                                                    marcado !== true
+                                                    slide.marcado === true
                                                         ? "0px -10px 12px -4px #4cd815"
                                                         : "0px -10px 12px -4px #9A15D8",
                                             }}
@@ -251,14 +278,16 @@ function paravoceREVISU() {
                                                 <button
                                                     className="icon-btn sinopse-btn"
                                                     onClick={() =>
-                                                        navigate("/sinopse-obra/" + slide.idObra)
+                                                        navigate(
+                                                            `/sinopse-obra/${slide.idObra || slide.id}/${usuario}`
+                                                        )
                                                     }
                                                 >
                                                     <PiFilmReel className="icon" />
                                                     <p style={{ marginLeft: "10px" }}>Sinopse</p>
                                                 </button>
 
-                                                <div style={{ display: marcado === true ? "" : "none" }}>
+                                                <div style={{ display: slide.marcado === true ? "none" : "" }}>
                                                     <button
                                                         className="icon-btn marcar-btn"
                                                         style={{ boxShadow: "1px 1px 10px 1px #4cd815" }}
@@ -269,7 +298,7 @@ function paravoceREVISU() {
                                                 </div>
 
                                                 <div
-                                                    style={{ display: marcado !== true ? "" : "none" }}
+                                                    style={{ display: slide.marcado === false ? "none" : "" }}
                                                 >
                                                     <button
                                                         className="icon-btn desmarcar-btn"
@@ -302,130 +331,107 @@ function paravoceREVISU() {
                     );
                 })}
 
-                {topCeleGenres.map((genero) => {
-                    const celebsDoGenero = slidesCelebridades.filter((c) =>
-                        c.generos?.includes(genero)
-                    );
-                    const indexAtual = indexCelebridadesPorGenero[genero] || 0;
-                    const visibleCelebs = getVisibleSlides(
-                        celebsDoGenero,
-                        indexAtual,
-                        visibleCountCele
-                    );
+                <div className="carrousel-celeDesta">
+                    <div className="titulo">
+                        <p style={{ color: "#9A15D8", marginLeft: "10px" }}>CELEBRIDADES</p>
+                        <p style={{ marginLeft: "10px" }}>EM DESTAQUE</p>
+                    </div>
 
-                    if (!celebsDoGenero.length) return null;
+                    <div style={{ marginTop: "10px", marginLeft: "5%" }}>
+                        <p>Principais Atores e Atrizes de com sua preferências.</p>
+                    </div>
 
-                    return (
-                        <div className="carrousel-celeDesta" key={genero}>
-                            <div className="titulo">
-                                <p style={{ color: "#9A15D8", marginLeft: "10px" }}>CELEBRIDADES</p>
-                                <p style={{ marginLeft: "10px" }}>EM DESTAQUE  –</p>
-                                <p style={{ color: "#9A15D8", marginLeft: "5px", fontWeight: "600" }}>{genero}</p>
-                            </div>
+                    <div className="container-carrousel-celeDesta">
+                        <button className="arrow left" onClick={prevSlideCele}>
+                            ❮
+                        </button>
 
-                            <div style={{ marginTop: "10px", marginLeft: "5%" }}>
-                                <p>
-                                    Atores e atrizes que se destacam em obras do gênero {genero}.
-                                </p>
-                            </div>
-
-                            <div className="container-carrousel-celeDesta">
-                                <button
-                                    className="arrow left"
-                                    onClick={() => prevSlideCeleGenero(genero)}
+                        <div className="slides-grid-celeDesta">
+                            {getVisibleSlidesCelebridades().map((cele) => (
+                                <div
+                                    className="card-celeDesta"
+                                    key={cele._i}
+                                    style={{
+                                        boxShadow:
+                                            cele.marcado === true
+                                                ? "0px -10px 12px -4px #4cd815"
+                                                : "0px -10px 12px -4px #9A15D8",
+                                        border:
+                                            cele.marcado === true
+                                                ? "2px solid #4cd815"
+                                                : "2px solid #9a15d8",
+                                    }}
                                 >
-                                    ❮
-                                </button>
-
-                                <div className="slides-grid-celeDesta">
-                                    {visibleCelebs.map((cele) => (
-                                        <div
-                                            className="card-celeDesta"
-                                            key={cele._i}
-                                            style={{
-                                                boxShadow:
-                                                    marcado !== true
-                                                        ? "-8px 0 12px -2px #4cd815"
-                                                        : "-8px 0 12px -2px #9A15D8",
-                                            }}
-                                        >
-                                            <div className="foto-wrapper">
-                                                {cele.foto ? (
-                                                    <img
-                                                        className="slide-imageceleDesta"
-                                                        src={`https://image.tmdb.org/t/p/w500/${cele.foto}`}
-                                                        alt={cele.nome}
-                                                    />
-                                                ) : (
-                                                    <div className="foto-fallback">
-                                                        <CiImageOff className="fallback-icon" />
-                                                        <p className="fallback-text">Sem foto</p>
-                                                    </div>
-                                                )}
+                                    <div className="foto-wrapper">
+                                        {cele.imagem || cele.foto ? (
+                                            <img
+                                                className="slide-imageceleDesta"
+                                                src={`https://image.tmdb.org/t/p/w500/${cele.imagem || cele.foto
+                                                    }`}
+                                                alt={cele.nome}
+                                            />
+                                        ) : (
+                                            <div className="foto-fallback">
+                                                <CiImageOff className="fallback-icon" />
+                                                <p className="fallback-text">Sem foto</p>
                                             </div>
+                                        )}
+                                    </div>
 
-                                            <div className="info-celeDesta" style={{ width: "77%" }}>
-                                                <p className="title-celeDesta">{cele.nome}</p>
+                                    <div className="info-celeDesta" style={{ width: "77%" }}>
+                                        <p className="title-celeDesta">{cele.nome}</p>
 
-                                                <div className="generos-celeDesta">
-                                                    {cele.generos?.map((g, idx) => (
-                                                        <span
-                                                            className="genero-chip"
-                                                            key={idx}
-                                                            style={{
-                                                                borderColor: generosColorsMap[g] || "#9A15D8",
-                                                            }}
-                                                        >
-                                                            {g}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
+                                        <div className="generos-celeDesta">
+                                            {(cele.generos || []).map((g, idx) => (
+                                                <span
+                                                    className="genero-chip"
+                                                    key={idx}
+                                                    style={{
+                                                        borderColor: generoColors[g] || "#9A15D8",
+                                                    }}
+                                                >
+                                                    {g}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
 
-                                            <div style={{ width: "8%" }}>
+                                    <div style={{ width: "8%" }}>
+                                        <button className="icon-btn" onClick={() => navigate(`/detalhe-cele-dire/${cele.idElenco}/${usuario}`)}>
+                                            <BsPersonBoundingBox
+                                                className="icon"
+                                                style={{ color: "#d8c415ff" }}
+                                            />
+                                        </button>
+
+                                        <div style={{ marginTop: "10%" }}>
+                                            <div style={{ display: cele.marcado === true ? "none" : "" }}>
                                                 <button className="icon-btn">
-                                                    <BsPersonBoundingBox
+                                                    <BsFillPersonCheckFill
                                                         className="icon"
-                                                        onClick={() => navigate("/detalhe-cele-dire")}
-                                                        style={{ color: "#d8c415ff" }}
+                                                        style={{ color: "#4cd815" }}
                                                     />
                                                 </button>
-
-                                                <div style={{ marginTop: "10%" }}>
-                                                    <div style={{ display: marcado === true ? "" : "none" }}>
-                                                        <button className="icon-btn">
-                                                            <BsFillPersonCheckFill
-                                                                className="icon"
-                                                                style={{ color: "#4cd815" }}
-                                                            />
-                                                        </button>
-                                                    </div>
-                                                    <div
-                                                        style={{ display: marcado !== true ? "" : "none" }}
-                                                    >
-                                                        <button className="icon-btn">
-                                                            <BsFillPersonDashFill
-                                                                className="icon"
-                                                                style={{ color: "#9A15D8" }}
-                                                            />
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                            </div>
+                                            <div style={{ display: cele.marcado === false ? "none" : "" }}>
+                                                <button className="icon-btn">
+                                                    <BsFillPersonDashFill
+                                                        className="icon"
+                                                        style={{ color: "#9A15D8" }}
+                                                    />
+                                                </button>
                                             </div>
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
-
-                                <button
-                                    className="arrow right"
-                                    onClick={() => nextSlideCeleGenero(genero)}
-                                >
-                                    ❯
-                                </button>
-                            </div>
+                            ))}
                         </div>
-                    );
-                })}
+
+                        <button className="arrow right" onClick={nextSlideCele}>
+                            ❯
+                        </button>
+                    </div>
+                </div>
 
                 {/* DIRETORES – deixei 1 carrossel igual você já tinha */}
                 <div className="carrousel-diretDesta">
@@ -454,7 +460,7 @@ function paravoceREVISU() {
                                     key={dire._i}
                                     style={{
                                         boxShadow:
-                                            marcado !== true
+                                            dire.marcado === true
                                                 ? "-8px 0 12px -2px #4cd815"
                                                 : "-8px 0 12px -2px #9A15D8",
                                     }}
@@ -491,16 +497,15 @@ function paravoceREVISU() {
                                     </div>
 
                                     <div style={{ width: "8%" }}>
-                                        <button className="icon-btn">
+                                        <button className="icon-btn" onClick={() => navigate(`/detalhe-cele-dire/${dire.idElenco}/${usuario}`)}>
                                             <BsPersonBoundingBox
                                                 className="icon"
-                                                onClick={() => navigate("/detalhe-cele-dire")}
                                                 style={{ color: "#d8c415ff" }}
                                             />
                                         </button>
 
                                         <div style={{ marginTop: "10%" }}>
-                                            <div style={{ display: marcado === true ? "" : "none" }}>
+                                            <div style={{ display: dire.marcado === true ? "none" : "" }}>
                                                 <button className="icon-btn">
                                                     <BsFillPersonCheckFill
                                                         className="icon"
@@ -508,7 +513,7 @@ function paravoceREVISU() {
                                                     />
                                                 </button>
                                             </div>
-                                            <div style={{ display: marcado !== true ? "" : "none" }}>
+                                            <div style={{ display: dire.marcado === false ? "none" : "" }}>
                                                 <button className="icon-btn">
                                                     <BsFillPersonDashFill
                                                         className="icon"
