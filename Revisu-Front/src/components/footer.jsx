@@ -20,7 +20,7 @@ export default function Footer({ logado }) {
                 {logado === true && <span className="footer-separator">|</span>}
                 {logado === true && <Link to="/para-voce">Para Você</Link>}
                 {logado === true && <span className="footer-separator">|</span>}
-                <Link to="/sobre">Sobre nós</Link>
+                <Link to="/sobre-nos">Sobre nós</Link>
             </nav>
 
             <div className="footer-right">
