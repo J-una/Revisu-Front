@@ -481,7 +481,7 @@ function bibliotecaREVISU() {
                                 Nenhuma celebridade selecionada...
                             </p>
                         ) : (
-                            <div>
+                            <>
                                 <button className="arrow left" onClick={prevSlideObra}>
                                     ❮
                                 </button>
@@ -566,7 +566,7 @@ function bibliotecaREVISU() {
                                 <button className="arrow right" onClick={nextSlideObra}>
                                     ❯
                                 </button>
-                            </div>)}
+                            </>)}
                     </div>
                 </div>
 
